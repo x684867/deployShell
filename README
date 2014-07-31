@@ -1,4 +1,4 @@
-============================================================
+=============================================================================
       _            _              _____ _          _ _ 
      | |          | |            / ____| |        | | |
    __| | ___ _ __ | | ___  _   _| (___ | |__   ___| | |
@@ -7,6 +7,917 @@
   \__,_|\___| .__/|_|\___/ \__, |_____/|_| |_|\___|_|_|
             | |             __/ |                      
             |_|            |___/                       
-============================================================
-(c) 2014 Sam Caldwell (mail@samcaldwell.net)
-------------------------------------------------------------
+=============================================================================
+
+The MIT License (MIT)
+
+Copyright (c) 2014 Sam Caldwell.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+=============================================================================
+                           Table of Contents
+=============================================================================
+
+	I.      Introduction
+	II.     Getting Started
+	III.    Architecture: An Overview
+	IV.     Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
+	V.      RESERVED
+	VI.     Recipes: A Beginning
+	VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
+	VIII.   Recipes: Quality Assurance through Unit Tests
+	IX.     Recipes: Advanced Recipes for Building Clusters
+	X.      User Management in deployShell
+	XI.     Reserved
+	XII.	Reserved
+	XIII.	Reserved
+	XIV.    Built-in Command Reference
+	XV.     Add-On Command Reference
+
+	
+=============================================================================
+I. 	Introduction
+=============================================================================
+
+I. A. What is DeployShell?
+
+deployShell is an automation front-end intended to provide a single point of
+automation and interaction with multiple cloud-providers (e.g. Amazon AWS, 
+Digital Ocean, Google Compute Engine, Rackspace Cloud, etc.) such that an
+organization can deploy servers across vendors dynamically with lower lead
+times.
+
+Historically the idea of moving servers from one cloud provider to another 
+has been met with fear of outages and the dread that someone in operations 
+would have to script the automation of a new vendor's API, throwing away all
+past work.  From a management perspective, this translates to the cost of
+learning the new vendor's platform in addition to rewriting existing code.
+
+The objective of deployShell is to build an open-source, simple, scalable and
+dependency-free platform for organizations ranging from the small startup to
+the enterprise.  This begins with the following design principles:
+
+    (1) Start with a common denominator and add no new deployment dependencies.
+
+    (2) Ensure adequate security around the deployment mechanism both for
+        external threats and internal controls.
+
+    (3) Build an out-of-the-box, simple-to-learn/simple-to-use solution that
+        will lower labor costs for consuming organizations and reduce ramp-up
+        time.
+
+    (4) Keep it scalable.  The solution should be able to add new cloud
+        providers with little pain or re-write.
+
+The first question one has to confront when introducing a new technology is 
+"Why not use [enter existing technology here]?"  In the case of deployment
+automation, that question might be "Why not use Chef?"  "Why not use Puppet?"
+"Why not use PXE and Kickstart?"  The answer two part: simplicity and the need
+for a comprehensive solution.  PXE will install an operating system. Kickstart
+will configure an installed environment with custom parameters.  Chef, Puppet
+and Capistrano will orchestrate cloud environments to build vendor-specific
+custom environments.  But none of these solutions bring all cloud vendors into
+one cohesive ecosystem organizations can leverage to deliver their solution
+with minimum effort.
+
+deployShell is a complete framework which can be adapted to private and public
+cloud deployment needs.  The vision not only allows for public cloud vendor
+support but an extensibility which may come to cover the private cloud products
+as well as hypervisor deployments.  In the end, the deployShell offers the 
+greatest potential for full-service deployment automation.
+
+
+II. B. DevOps: Opening the Shortest Path to Production
+
+The famous joke in software development is the software engineer shrugging and
+replying "It works on my machine" during a system outage.  Most of these issues
+are the result of bad practices within the developer environments.  Many coders
+simply move from project to project, coding against their laptop or workstation
+without ever stopping to clean their machine and prevent dependencies from one
+project from affecting another.  Moreover, programmers often work on their 
+local machines, blurring the lines between development tools and the software
+deliverable.  The result is a generation of bad blood between developers and
+frustrated systems administrators.  The solution is a uniform not just the 
+DevOps movement but a new, shorter path from idea to production.  This path is
+facilitated by a single deployment mechanism to allow applications to be 
+developed against "production-like" virtual environment then deployed as an 
+entire system stack to the target production environment using the exact same
+deployment code.  This is the path created by deployShell.
+
+Development environments on the cloud are expensive.  Whether we are talking
+about Amazon, Google, Rackspace, etc., the cloud is expensive.  It is also not
+necessary when Operations teams can deploy development environments within the
+local network or on local laptops.  The scenario looks like this--
+
+    (1) OPERATIONS sets up deployShell for production deployments
+	
+    (2) OPERATIONS creates a git recipe repository for the organization.
+	
+    (3) DEVOPS creates basic environment recipes as the starting point.
+	
+    (4) IT installs Parallels, virtualbox, VMware ESX, etc. depending on the
+        business need.
+	
+    (5) IT deploys virtual machines to QA and developer workstations and 
+        installs deployShell to these "local-deploy" VMs before connecting them
+        to the git recipe repository (the same one used by operations).
+	
+    (6) DEVELOPMENT and QA can now use deployShell to pull from the develop and
+        QA branches of the recipe repository (according to their deployShell
+        configuration) and deploy mission-specific machines to their local
+        environments.
+		    
+    (7) As code evolves on the local development environment, DEVELOPMENT and
+        DEVOPS make changes to recipes in the develop branch of the recipe
+        repository.  DEVOPS and QA merge these changes into the QA branch
+        for testing.  Then when QA has passed the build, DEVOPS and OPERATIONS
+        can promote the recipe changes to the master branch and deploy the
+        software (as a complete stack) to production.
+
+
+=============================================================================
+II.	 Getting Started
+=============================================================================
+
+II. A. Dependencies
+
+The deployShell design demands that the software run on a small, low-cost 
+Linux server with as few dependencies as possible.  Accordingly the following
+list of dependencies that must be met should make any Systems Administrator
+smile:
+
+	*Debian 7 Linux ("Wheezy") or Ubuntu 12.04 x64 ("Precise")
+	*bash shell
+	*curl
+
+The deployShell install script will install everything else that is needed,
+but even then the list is intentionally short:
+
+	*git-core
+	*openSSH (client and server)
+	*awk
+	*sed
+	*grep
+	*cut
+
+
+II. B. Roadmap
+
+
+    UPDATE: As of 13 July 2014, the installer is not available for public 
+            access.
+
+            
+II. B. 1. Development Roadmap
+
+The roadmap for this project is driven by two needs: (1) the needs of the 
+author's personal projects, and (2) the needs of the author's employer at the
+time.  This means that initial focus is on Digital Ocean.
+
+
+II. B. 2. Targets:
+
+    2014-09-01  :   First Beta (supporting Digital Ocean)
+    	
+    2014-11-01  :   Second Beta (adding Google Compute)
+    	
+    2014-12-01  :   Third Beta (supporting Amazon AWS)
+    	
+    2015-(Q1)   :   Implement Dynamic Mapping?
+    	
+    2015-(Q2)   :   Implement DNS Management (via recipes)
+    	
+    2015-(Q3)   :   Implement "Cluster Recipes and Load Balancer support"
+    	
+    2015-(Q4)   :   Implement "Recipe inclusion within recipes"
+    	
+
+II. C. Installing deployShell
+
+    (1) To install deployShell--
+	
+        (1) Setup a Linux server (virtual machines on laptops are suitable).
+            The machine will never need more than 512MB RAM and most of this
+            is the operating system.  Disk size is determined by the number
+            of recipes the server will host.
+			
+        (2) Run the installer:
+				
+            curl -s http://FQDN_ommitted_for_now.tld/path/setup | sudo bash
+
+        (3) When prompted, answer the questions, which will include the domain
+            name used for the deployShell server, the name of the admin user
+            and so forth.
+			
+        (4) Get coffee.
+		
+        (5) Brag to coworkers/friends.  The bulk of the work is done.
+		
+    (2) Configuring deployShell recipe repository:
+	
+        (1) Execute "ssh user@server.tld 'attachRecipeRepo'"
+
+        (2) The system will ask for information needed to map the deployShell
+            to some remote repository.
+
+        (3) Celebrate.  It is done.
+
+    (3) Done.
+
+
+II. D. Deploying a Server (Overview)
+
+	There are three (3) steps to create a server with deployShell:
+	
+        (1) Create a deployment recipe (see II. E. "Creating a Recipe").
+
+        (2) Add a cloud-provider account to the deployShell server.
+		
+            ssh user@server.tld 'addCloudAccount myAccountName cloudProviderName'
+			
+            The deployShell will prompt the user for parameters specific to
+            the cloud provider's API and generate an account file.
+		
+        (3) Execute createServer to apply the recipe.
+		
+            ssh user@server.tld 'createServer cloudProviderName myRecipeName'
+			
+        (4) The deployShell will return its pass/fail and diagnositic 
+            information when it is done.
+
+
+II. E. Creating Server Recipes
+
+		NEED CONTENT
+
+
+=============================================================================
+III.	 Architecture: An Overview
+=============================================================================
+
+deployShell is based on the following abstraction model.  The purpose of the 
+model is to "keep it scalable."  Each layer should be interchangeable with 
+updated code over time in order to support new cloud vendors or new features
+without a major software overhaul.
+
+
+	+---------------------------------------------------------------+
+	| deployShell Abstraction Model                                 |
+	+---------------------------------------------------------------+
+	|                       deployShell User                        |
+	|                          |   |     |                          |
+	|                          V   |     V                          |
+	|  deployShell Add-on Commands | deployShell Built-in Commands  |
+	|             |                |                |               |
+	|             V                |                V               |
+	|   deployShell API Commands   | deployShell Server Environment |
+	|             |                |                                |
+	|             V                |                                |
+	|   deployShell API Mappings   +--------------------------------+ 
+	|             |                |
+	|             V                |
+	|  deployShell API Interfaces  |
+	|             |                |
+	|             V                |
+	|    Cloud Provider API        |
+	|             |                |
+	|             V                |
+	|      Cloud Provider          |
+	+------------------------------+
+
+
+
+III. A. deployShell API Interfaces
+
+The rubber meets the road in deployShell with the "API Interfaces."  These are
+the software objects (functions) which translate a deployShell API command
+into a vendor-specific API action.
+
+For example, when the user calls createServer, the API interface must take the
+generic 'createServer' command and create a server on a vendor specified in
+the recipe file.  This requires the API command createServer to load the recipe
+and determine which vendor-specific API interface is appropriate.  But then
+when it calls the API interface function createServer(), this function must
+translate deployShell recipe artifacts (image, dataCenter,serverSize, etc.)
+into the vendor specific language (see "API Mappings") and then call the vendor
+API to create the actual server instance.
+
+
+III. B. deployShell API Mappings
+
+There is no common language in cloud to identify operating system image name,
+data center name/region, server size/capacity, etc.  The lack of an open 
+standard for such requires deployShell to map a generic definition of these
+concepts into vendor-specific language.  For example, one vendor might call
+an Ubuntu 14.04 x64 image "ubuntu1404x64" while another uses a numeric ID.
+deployShell must translate these discrete naming systems into a common 
+language so as to free the user from vendor lock-in.
+
+
+III. C. deployShell API Commands
+
+deployShell cannot support every feature of every vendor.  That is not the
+purpose of deployShell, though features may be added in time.  The objective
+is to provide common-denominator operations.  These are the operations which
+are common to ALL supported cloud providers and they include--
+
+	1. createServer
+	2. deleteServer
+	3. listServers
+
+The reader might notice that "restartServer" is not on the above list.  This
+is by design.  The "cloud" paradigm (defined as disposable, elastically
+scalable systems deployed for the duration of their usefulness) would hold 
+that "cloud servers" are not maintained in the traditional model.  They are
+created and deleted.  Their recipes (or blue prints) are maintained while 
+the server itself is simply redeployed when trouble arises.
+
+
+=============================================================================
+IV.	 Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
+=============================================================================
+
+To make the deployShell solution vendor agnostic, the system must devise a 
+means of mapping vendor-specific cloud lexicons into an abstract lexicon.  
+This allows recipes to define server configurations without consideration of
+the cloud hosting provider to be supported.  For example, an engineer can 
+define a recipe, identifying the number of CPU cores, amount of RAM, disk
+expectations and cost parameters.  This allows the same recipe to define a
+server environment on any hosting provider without change.  In order for this
+to work, the system must have an internal lexicon for use within the recipes
+and a system of mapping between vendor-specific lexicons and this internal
+lexicon.
+
+The internal mapping files which define the deployShell resource lexicon are
+found in conf/mapping/, written in JSON.  There are three (3) types of maps:
+
+	(1) image,
+	
+	(2) location,
+	
+	(3) size
+
+Mapping in general consists of three (3) problems:
+
+	(1) Generic Map Creation
+	
+	(2) Vendor-Feed Download and Parsing.
+
+	(3) Vendor-Feed to Generic Map Process
+	
+The first problem is addressed during the software development process when
+the local maps found in conf/mapping are created.  These maps define the 
+resource terms understood by deployShell and made available to developers via 
+recipes.
+
+The second problem is addressed in each vendor-specific API interface, which
+will connect to the vendor's API and download the appropriate resource list
+(in the vendor-specific format).  It then parses and transforms the API
+return (often a JSON or XML output) into a standardized data structure.
+
+The standardized data structure is then "mapped" to the relevant local map to
+create a vendor- and domain-specific map file (also in conf/mapping) which 
+bears the name of the cloud vendor and account as well as the type of map,
+e.g. 
+
+    +-----------------------------------------+-----------------------------+
+    |Map File Path                            |Description                  | 
+    +-----------------------------------------+-----------------------------+
+    |conf/mapping/images                      |provides the local resource  |
+    |                                         |map for images.              |
+    +-----------------------------------------+-----------------------------+
+    |conf/mapping/...map|provides the vendor- and     |
+    |                                         |domain-specific map.         | 
+    +-----------------------------------------+-----------------------------+
+    |Note: When we refer to a "vendor- and domain-specific map," we refer to|
+    |      a map that pertains to the cloud hosting provider and its local  |
+    |      account configuration file as well as to the map type (domain).  |
+    +-----------------------------------------------------------------------+
+
+Because vendor-specific API interface code must access the local resource maps
+during the mapping process, a common Python library (mapHandlers.py) exists
+and this library provides the "MapClass" class for loading and writing map 
+files to conf/mapping.
+
+Map names should observe the following conventions:
+
+	(1) Map names must be less than forty (40) characters in length.
+	(2) Map names must contain only alpha-numeric strings (including underscore
+	    and hyphen) but no spaces or other characters.
+
+
+IV. A. Standardized Mapping API Interface Structures
+
+Each API Interface is substantially different internally as it must confront a
+different API interaction problem as well as a different data-transformation
+problem.  However, the API Interfaces have some commonalities across the 
+spectrum of cloud providers, to wit:
+
+    (1) Each API interface must consist of the following three (3) wrapper 
+        scripts: apiProcessImageFeed, apiProcessLocationFeed and
+        apiProcessSizeFeed.  These are the feed processing API calls the
+        deployShell system use to pull down and map new data.
+
+	(2) Each API interface must have an install script which will setup the
+	    dependencies for the feed processors as well as other interface code.
+	    
+	(3) Each API interface will maintain the specialized feed processing code
+        in the api//bin/ directory.
+
+
+IV. B. Integrating API Interface Structures into the deployShell System
+
+Most of the functionality of deployShell is driven by user interaction with 
+the system's main shell script (~/deployShell/deployShell).  However feed
+processing for resource maps is not driven by the user interaction.  It is 
+instead driven by the deploy user's crontab.  This crontab file can be
+managed by user interaction--
+
+	See enableFeedJobSchedule, disableFeedJobSchedule, listJobs in the
+	command reference or the online help file.
+	
+When the cron job fires, it executes "cron/jobMaster" as the wrapper script
+to setup the runtime environment before passing control to the appropriate
+top-level feed processor (e.g. processImageFeed, processLocationFeed, 
+processSizeFeed).  These top-level feed processor scripts (written in Bash)
+will setup and route the work to the appropriate vendor API interface with
+the correct vendor-specific parameters (e.g. tokens).
+
+
+IV. C. Local Resource Map Structures
+
+Local resource map files are found in conf/mapping/ and are written in JSON
+as a single, domain-specific object.  Each file consists of a header and a
+map array containing the location objects.
+
+
+IV. C. 1. Location Map JSON Structure
+
+Location maps create geographic regions to which deployShell can deploy 
+infrastructure.  These geographic regions are described by--
+
+	+----+------------------------------------------------------------------+
+	|Loc | A "friendly name" the recipe set can use to define the data      |
+	|    | center.                                                          |
+	+----+------------------------------------------------------------------+
+	|desc| A "description" of the location for human-readable purpose.      |
+	+----+------------------------------------------------------------------+
+	|long| The longitude of the region's center of mass.                    |
+	+----+------------------------------------------------------------------+
+	|lat | The latitude of the region's center of mass.                     |
+	+----+------------------------------------------------------------------+
+	
+The original location map is shown below:
+
+{
+	"class":"map",
+	"type":"images",
+	"scope":"local",
+	"updated":1405393850,
+	"map":[ 
+		{"loc":"usnw","desc":"US North West","long":0,"lat":0},
+		{"loc":"usne","desc":"US North East","long":0,"lat":0},
+		{"loc":"usnc","desc":"US North Central","long":0,"lat":0},
+		{"loc":"ussc","desc":"US South Central","long":0,"lat":0},
+		{"loc":"usse","desc":"US South East","long":0,"lat":0},
+		{"loc":"ussw","desc":"US South West","long":0,"lat":0}
+	]
+}
+
+(NOTE: The longitude and latitude in the above descriptions have a zero-value.
+       They should be populated before production.)
+
+
+
+IV. C. 2. Size Map JSON Structure
+
+So-called "Size" maps describe resource constraints for servers created with the
+deployShell system.  Factors considered here include CPU speed, core count, RAM
+size, disk configuration, IOPS, bandwidth and networking as well as operating 
+cost per hour.
+
+The local size map, unlike location and size, does not focus on mapping a
+vendor-specific lexicon to an abstract lexicon.  With location, for example, a
+data center in New York maps easily to the US North West region (usnw).  But in
+the size abstraction, the local resource map conf/mappings/size simply defines
+what size-resource objects may be considered in a recipe.  
+
+
+{
+    "class":"map",
+    "type":"size",
+    "scope":"local",
+    "updated":1405393850,
+    "map":[ 
+        {
+            "factor":"cpuCores",
+            "desc":"Number of CPU Cores",
+            "type":"integer"
+        },
+        {
+			"factor":"RAM",
+			"desc":"Amount of Memory",
+			"type":"integer"
+		},
+		{
+			"factor":"Bandwidth",
+			"desc":"Total Allowed Bandwidth (KB) included",
+			"type":"integer"
+		},
+		{
+			"factor":"DiskSize",
+			"desc":"Disk Size included in boot image.",
+			"type":"integer"
+		},
+		{
+			"factor":"canAddDisks",
+			"desc":"Disk Size included in boot image.",
+			"type":"Boolean"
+		},
+		{
+			"factor":"hasPrivateNetworking",
+			"desc":"Supports private network interface.",
+			"type":"Boolean"
+		},
+		{
+			"factor":"hasNAT",
+			"desc":"Network uses NAT",
+			"type":"Boolean"
+		},
+		{
+			"factor":"hourlyBaseCost",
+			"desc"	:"Base cost for the server node.",
+			"type"	:"float"
+		},
+		{
+			"factor":"addedDiskCost",
+			"desc":"Cost of added disks per MB/hr",
+			"type":"float"
+		},
+		{
+			"factor":"canAddStaticIP",
+			"desc":"Can add static IP addresses to servers.",
+			"type":"Boolean",
+		}
+	]
+}
+
+
+
+IV. C. 3. Image Map JSON Structure
+
+	
+IV. B. Mapping Location
+
+Mapping location of data centers where the server instances will run is the
+easiest of the three mapping types.  Yet it is neither an exact science nor
+is it a simple solution.  The problem is defining how you might map the data
+center locations of vendors A, B and C to some generic dictionary of locations
+and still have a useful location for the users to geographically disburse 
+services for disaster prevention/recovery.
+
+deployShell maps locations based on proximity to an arbitrary central point of
+geographic regions.  Currently the mapping strategy divides the United States
+into six (6) regions:
+
+
+	+------------------------+
+	|REGION	DESCRIPTION      |
+	+------------------------+
+	|usnw:   US-NorthWest    |
+	|usne:   US-NorthEast    |
+	|usnc:   US-NorthCentral |
+	|ussc:   US-SouthCentral |
+	|usse:   US-SouthEast    |
+	|ussw:   US-SouthWest    |
+	+------------------------+
+
+Determining the proper region for a given datacenter is a matter of geolocating
+the data center and determining the region whose center-mass has the closest 
+proximity.  This requires that each region have a center identified by longitude 
+and latitude against which data center locations can be compared.  The challenge
+arrives if some data center is located at the mid-point between the center of
+two regions.  However, this is so unlikely that it is not addressed in the 
+current project.  But it will probably arise at some point in the future and 
+should thus be noted.
+
+Automation for regionalization is planned for an unknown later date.  Currently,
+data center regions are mapped manually by an arbitrary process since the data
+centers supported are sufficiently distant from one another.
+
+
+IV. B. Mapping Images
+
+Mapping operating system images in deployShell is a little more than simply
+measuring the distance between two points and dropping the result in a bucket.
+Operating systems are classified with three (3) factors:
+
+	(1) Distribution (e.g. CentOS,Debian,Ubuntu)
+	
+	(2) Version (e.g. 12.04, 14.04, etc.)
+	
+	(3) Architecture (x32, x64)
+
+To avoid complexity and a maintenance nightmare, only the images which are
+currently supported by ALL of the enabled vendors should ever appear as mapped
+images.  This will require periodic "pruning" of image maps in some later
+version.  As with other mapping problems, this is currently a manual process.
+
+
+IV. C. Mapping Sizes
+
+Server instance sizes determine cost as well as technology resources.  The 
+variations are wide ranging and ever-changing.  A static mapping of server size
+across the cloud ecosystem is not likely to succeed for this reason.  Therefore,
+"size mapping" is extended into a different direction.  People do not choose a
+vendor's sizing because it meets their specific needs.  They choose the closest
+approximation to their needs based on specific criteria that do matter.
+
+The deployShell server-size mapping likewise performs an approximation through 
+the recipe, where its author defines the criteria that do matter, leaving the
+rest to their system default.  For example, a recipe defines--
+
+	(1) Number of CPU Cores
+	(2) Percentage of CPU Share
+	(3) Minimum RAM
+	(4) Maximum RAM
+	(5) Minimum Disk Size
+	(6) Maximum Disk Size
+	(7) Minimum IOPS
+	(8) Maximum IOPS
+	(9) Maximum Hourly Cost
+
+The shell then evaluates the desired cloud hosting vendor, region and image to 
+determine which server_size is both available and closely approximate to the
+requirements.  Any unsupported requirement is assumed to be met and any infeasible
+minimum or maximum is likewise defaulted to an acceptance.  In the end, the 
+author gets a server configuration that most closely meets his/her needs.
+
+The problem comes when two requirements have the same approximation for two or 
+more solutions.  In these cases, factors must be assigned a weight to determine
+what matters more in the case of a tie.  This means that the recipe must define
+the following:
+
+
+	-----------------------------------------------------
+	Mapping Criteria            Value       Weight
+	-----------------------------------------------------
+	Number of CPUs              nCPU        nCPUw
+	Percentage of CPU Share     pCPU        pCPUw
+	Minimum RAM                 mnRAM       mnRAMw
+	Maximum RAM                 mxRAM       mxRAMw
+	Minimum Disk Size           mnDS        mnDSw
+	Maximum Disk Size           mxDS        mxDSw
+	Minimum IOPS                mnIO        mnIOw
+	Maximum IOPS                mxIO        mxIOw
+	Maximum Hourly Cost         mxCost      mxCostw
+	-----------------------------------------------------
+
+
+IV. D. Reading and Writing Map Files
+
+
+=============================================================================
+V. Mapping: Dynamic Feeds and Mapping
+=============================================================================
+
+In order to create maps between abstract deployShell terms and those of the
+many cloud hosting providers and their API, software must exist which will
+update the maps dynamically.  These software "mapping agents" execute through
+the deployShell server's cron daemon to poll the enabled cloud hosting provider
+API for entities which can be applied to local maps.
+
+In the case of location and image maps, the idea of downloading feeds from the
+cloud providers then building the mapping files found in conf/mappings is 
+straight forward.  However, extending this to server size, the matter becomes
+less clear.  So-called "map information" downloaded for server-size mappings 
+does not create a static map from deployShell to the cloud provider.  Instead
+it reduces the network load of requesting information each time a recipe is
+processed.  It also reduces the deployment latency (i.e. the time required for
+a recipe to be processed from text file into a running server instance.
+
+V. A. Dynamic Feed Job: SizeFeedProcessor
+
+The first "dynamic feed job" is the "sizeFeedProcessor" which downloads feeds 
+from all of the enabled cloud hosting providers.  This job executes the following
+process:
+
+    (1) Determine the list of enabled cloud provider API.
+  
+    (2) Iterate through the list for each element:
+        (2)(a) Connect to the API and fetch a list of possible server sizes.
+        (2)(b) Parse the list for each of the mapping criteria and write the
+               results to a size-map file (conf/mappings/size).
+                   
+The job executes as per the "Dynamic Feed Job Schedule."
+
+
+V. B. Dynamic Feed Job: LocationFeedProcessor
+
+Locations are mapped by the LocationFeedProcessor, which downloads a list of all
+data center locations maintained by a cloud hosting provider then maps the same
+by geolocation into deployShell geographic regions (see above).  This requires a
+more complex process than V. A.:
+
+    (1) Test whether conf/mappings/location.raw exists.
+        (1)(a) If file exists--
+            (1)(a)(1) Log that job will not run (blocked_in_progress).
+            (1)(a)(2) Terminate successfully.
+        (1)(b) Else--
+            (1)(b)(1) Log that job will run (not_blocked).
+            
+    (2) Determine the list of enabled cloud provider API.
+    
+    (3) Iterate through the list for each element:
+        (3)(a) Connect to the API and download a list of possible data centers.
+        (3)(b) Parse the list to create a temporary map file
+               (conf/mappings/location.raw).
+    
+    (4) Iterate through the temporary map file for each data center:
+        (4)(a) Spawn a mapping thread (locationFeedMapper) to geolocate the data
+               data centers and return the appropriate deployShell region string.
+   
+    (5) Update the temporary map file with the data center locations and when all
+        are updated, copy conf/mappings/location.raw to conf/mappings/locations
+        and delete the raw file.
+
+
+V. C. Dynamic Feed Job: ImageFeedProcessor
+
+Image feeds are mapped by the ImageFeedProcessor which downloads the list of all
+possible images provided by a hosting provider before mapping them to the generic
+deployShell nomenclature.  Of the mapping processes, this one is the most simple
+to document:
+
+    (1) Determine the list of enabled cloud provider API.
+    (2) Iterate through the list for each element.
+        (2)(a) Connect to the API and download the list of possible images.
+        (2)(b) Parse the list to create a map file.
+
+
+V. D. Dynamic Feed Job Schedule
+
+The feed job schedule executes under the deploy user's crontab, limiting the job's
+potential permissions to that of deploy for security reasons.  Each of these jobs 
+are built-in and perform only the tasks described above.  But from time to time a
+systems administrator may want to enable/disable the feed jobs (for example, to 
+avoid a deployShell outage when the feeds fail to update during a network outage,
+a systems administrator may decide to disable the schedule, among other reasons.
+To do this, the sysadmin simply executes:
+
+        disableFeedJobSchedule
+        
+When any outage/maintenance is complete, the sysadmin executes: 
+
+        enableFeedJobSchedule
+
+and the feed job schedule will resume.
+
+=============================================================================
+VI.     Recipes: A Beginning
+=============================================================================
+
+VI. A. Sections of a Recipe
+
+	(1) Server Requirements
+		(a) Cost
+		(b) Location
+		(c) Op/Sys
+		(d) RAM, CPU, Disk, I/O
+		(e) Cloud hosting provider.
+	(2) Server Configuration
+		(a) Partition Scheme
+		(b) Network Configuration
+		(c) Initial Package Load
+		(d) Firewall Configuration
+	(3) Role Configuration
+		(a) Pre-deploy Script
+		(b) Tag Processing
+		(c) Post-deployScript
+		(d) QA Validation
+
+=============================================================================
+VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
+=============================================================================
+
+This section extends Section VI to further explore the role of pre-deploy 
+scripts, Tag processing, and post-deploy scripts within the deployShell
+ecosystem.  These concepts extend deployShell both in their integration with
+and across cloud hosting providers as well as allowing for the deployment of
+rich environments.
+
+
+VII. A. Order of Operations
+
+As the names of each of the constructs covered in this section suggests, the
+order of operations is pre-deployment, tags (processed left to right), then
+post-deployment.  The content and operation of the pre-deployment and post-
+deployment scripts is arbitrary.  These scripts reside in the public recipe
+repository and are executed remotely on the target server before and after the
+tag list is processed.  When considering the order in which pre- and post-
+deployment scripts are executed, one should properly consider the role of the
+pre-deployment script as an optional preparatory step prior to applying the 
+tag list.  Most of the work not performed by the tag list should be performed
+by the post-deployment script.
+
+pre- and post-deployment scripts are executed on the target server by the
+following construct:
+
+	curl -s http://reciperepository.tld/deploy/ | bash
+	
+as the target server's root user via SSH.
+
+
+
+=============================================================================
+VIII.   Recipes: Quality Assurance through Unit Tests
+=============================================================================
+
+=============================================================================
+IX.     Recipes: Advanced Recipes for Building Clusters
+=============================================================================
+
+=============================================================================
+X.      User Management in deployShell
+=============================================================================
+
+X. A.   Users in deployShell
+
+Users created in deployShell are Linux users with deployShell as their user
+shell and /home/deploy as their home directory.  They authenticate with the
+server using SSH keys but have no access to the underlying operating system.
+Their only privilege is to execute deployShell commands and to use its feature
+set.  These users will appear in /etc/passwd and /etc/shadow as Linux users,
+but their privileges and other deployShell specific characteristics are found
+in CONFDIR/users.
+
+Users have two types of permissions: general and promoted.  Users with general
+permissions have the ability to deploy servers, delete servers, list objects
+and in general execute the deployment objective of the deployShell.  However,
+the general user privilege does not allow users to manage user or cloud 
+provider accounts.  Likewise general privileges do not allow the enabling or
+disabling of a cloud provider's API.  To do these non-general (or "promoted"
+tasks), the user must have his/her account "promoted," becoming a super user.
+
+
+X. B.   Creating deployShell Users
+
+
+
+X. C.   Deleting deployShell Users
+
+
+
+X. D.   Promoting deployShell Users
+
+
+
+X. E.   Demoting deployShell Users
+
+
+
+X. F.   Listing deployShell Users
+
+
+
+
+
+=============================================================================
+XI.     Reserved
+=============================================================================
+
+=============================================================================
+XII.    Reserved
+=============================================================================
+
+=============================================================================
+XIII.   Reserved
+=============================================================================
+
+=============================================================================
+XIV.    Built-in Command Reference
+=============================================================================
+
+=============================================================================
+XV.     Add-On Command Reference
+=============================================================================
+
+
+				
