@@ -1,0 +1,14 @@
+{
+	"class":"map",
+	"type":"locations",
+	"scope":"local",
+	"updated":1405393850,
+	"map":[ 
+		{"loc":"usnw","desc":"US North West","long":0,"lat":0},
+		{"loc":"usne","desc":"US North East","long":0,"lat":0},
+		{"loc":"usnc","desc":"US North Central","long":0,"lat":0},
+		{"loc":"ussc","desc":"US South Central","long":0,"lat":0},
+		{"loc":"usse","desc":"US South East","long":0,"lat":0},
+		{"loc":"ussw","desc":"US South West","long":0,"lat":0}
+	]
+}

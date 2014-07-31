@@ -1,0 +1,58 @@
+============================================================
+      _            _              _____ _          _ _ 
+     | |          | |            / ____| |        | | |
+   __| | ___ _ __ | | ___  _   _| (___ | |__   ___| | |
+  / _` |/ _ \ '_ \| |/ _ \| | | |\___ \| '_ \ / _ \ | |
+ | (_| |  __/ |_) | | (_) | |_| |____) | | | |  __/ | |
+  \__,_|\___| .__/|_|\___/ \__, |_____/|_| |_|\___|_|_|
+            | |             __/ |                      
+            |_|            |___/                       
+============================================================
+(c) 2014 Sam Caldwell (mail@samcaldwell.net)
+------------------------------------------------------------
+Help -> RELEASE_NOTES
+
+Date: 2014-07-14 @ 2313 CDT (scaldwell)
+=======================================
+FEATURE COMPLETE:
+-----------------
+	(1) listLocations
+	(2) listImages
+	(3) listjobs
+	(4) enableFeedJobSchedule
+	(5) disableFeedJobSchedule
+	
+WORK IN PROGRESS:
+	(1) API/listServers (digital ocean)
+	(2) processImageFeed
+	(3) processLocationFeed
+	(4) processSizeFeed
+
+
+Date: 2014-07-12 @ 2012 CDT (scaldwell)
+=======================================
+FEATURE COMPLETE:
+-----------------
+	(1) listServers is operational (lacks API integration at 
+		this time)
+
+	(2) help/documentation features are operational.  Content is
+	    still required and will be added on a feature-by-feature
+	    basis.
+    
+	(3) listServers help is updated.
+
+	(4) logger library is finished.
+	
+	(5) listRecipes is finished and documented.
+	
+	(6) listCloudProviders...done.
+	
+	(7) enableCloudProvider...done.
+	
+	(8) disableCloudProvider...done.
+	
+WORK IN PROGRESS:
+-----------------
+	(1) API/listServers.
+	(2) 

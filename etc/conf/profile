@@ -1,0 +1,18 @@
+# ~/etc/conf/profile
+#
+# deployShell Profile
+export DEPLOY_SHELL_BUILD="2014.07.04.2246"
+export DEPLOYSHELL_VERSION="develop"
+#
+export DEPLOYROOT="/home/deploy"
+export DEPLOYSHELLDIR="${DEPLOYROOT}/deployShell"
+export DEPLOYRECIPEDIR="${DEPLOYROOT}/deployShellRecipes"
+#
+export CONFDIR="${DEPLOYSHELLDIR}/conf"
+export DOCDIR="${DEPLOYSHELLDIR}/docs"
+#
+export APIDIR="${DEPLOYROOT}/deployShell/bin/api"
+export ACCOUNTDIR="${CONFDIR}/accounts/"
+export DEPLOYLIBDIR="${DEPLOYROOT}/deployShell/lib"
+export DEPLOYBINDIR="${DEPLOYROOT}/deployShell/bin"
+export CRONDIR="${DEPLOYBINDIR}/cron"

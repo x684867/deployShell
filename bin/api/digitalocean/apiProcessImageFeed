@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# api/digitalocean/apiProcessImageFeed
+#
+# The MIT License (MIT)
+#
+# Copyright (c) 2014 Sam Caldwell.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+
+# Input: provider name
+# Temp:	  (multi-file): ${CONFDIR}/mappings/images.${provider}.${account}.raw
+# Output: (multi-file): ${CONFDIR}/mappings/images.${provider}.${account}.map
+
+apiProcessImageFeed(){
+	logInit "apiProcessImageFeed()"
+	provider="$1"
+	imageMap="$CONFDIR/mappings/images.$provider"
+	lockFile="${imageMap}.lck"
+	
+	if [ -f "${lockFile}" ]; then
+		logWrite "Cannot continue.  Another instance appears to be running."
+		exit 1
+	else
+		echo "$(date +%s)" > ${lockFile} #Blocking any more instances from starting.
+		
+		#fetch account tokens
+		for account in \
+			$( \
+				find ${ACCOUNTSDIR}/enabled/ \
+					-type f \
+					-exec grep -H "API_PROVIDER=\"$provider\"" {} | \
+				awk -F\: '{print $1}'
+			); 
+		do
+			logWrite "Processing account for [$provider] named [$account].  Starting."
+			. ${ACCOUNTSDIR}/enabled/$account
+			imageMap="${imageMap}.${account}.map"
+			python ${APIDIR}/${provider}/bin/parseImageFeed.py $imageMap)
+			logWrite "Finished processing account for [$provider] named [$account]."
+		done
+		export API_TOKEN=""
+		logWrite "done.  {started:$(cat ${lockFile}),stopped:$(date +%s)}"
+		rm ${lockFile} &> /dev/null
+	fi
+}

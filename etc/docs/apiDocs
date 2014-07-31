@@ -1,0 +1,22 @@
+============================================================
+      _            _              _____ _          _ _ 
+     | |          | |            / ____| |        | | |
+   __| | ___ _ __ | | ___  _   _| (___ | |__   ___| | |
+  / _` |/ _ \ '_ \| |/ _ \| | | |\___ \| '_ \ / _ \ | |
+ | (_| |  __/ |_) | | (_) | |_| |____) | | | |  __/ | |
+  \__,_|\___| .__/|_|\___/ \__, |_____/|_| |_|\___|_|_|
+            | |             __/ |                      
+            |_|            |___/                       
+============================================================
+(c) 2014 Sam Caldwell (mail@samcaldwell.net)
+------------------------------------------------------------
+Help -> apiDocs
+
+
+I. Objective
+
+This document will detail knowledge needed to write a cloud
+provider API module for deployShell and document how an API
+integrates into the deployShell framework.
+
+II. 
