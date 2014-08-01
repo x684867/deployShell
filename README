@@ -36,39 +36,42 @@ Table of Contents
 ================================================================================
 
 
-	I.      Introduction
-		I. A. 	What is deployShell?
-		I. B.	Why Adopt deployShell?
+I.      Introduction
 
-	II.     Installing and Using deployShell
-		II. A.	Installation
-		II. B.	Getting Started
-		II. C.	Adding and Deleting Cloud-Provider Accounts
-		II. D.	Adding and Deleting Users
-		II. E.	Access Control Lists (User Permissions within deployShell)
-		II. F.	Creating, Listing and Deleting Server Instances.
+	I. A. 	What is deployShell?
+	I. B.	Why Adopt deployShell?
 
 
-	III.    Architecture: An Overview
+II.     Installing and Using deployShell
 
-		III. A.	The Shell User Interface.
-		III. B. Command Structure and Processing
-		III. C. FHS Compliance
-		III. D.	Mapping Operations
-		III. E. Evaluating Recipes Against Maps 
+II. A.	Installation
+II. B.	Getting Started
+II. C.	Adding and Deleting Cloud-Provider Accounts
+II. D.	Adding and Deleting Users
+II. E.	Access Control Lists (User Permissions within deployShell)
+II. F.	Creating, Listing and Deleting Server Instances.
 
-	IV.     Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
-	V.      RESERVED
-	VI.     Recipes: A Beginning
-	VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
-	VIII.   Recipes: Quality Assurance through Unit Tests
-	IX.     Recipes: Advanced Recipes for Building Clusters
-	X.      User Management in deployShell
-	XI.     Reserved
-	XII.	Reserved
-	XIII.	Reserved
-	XIV.    Built-in Command Reference
-	XV.     Add-On Command Reference
+
+III.    Architecture: An Overview
+
+	III. A.	The Shell User Interface.
+	III. B. Command Structure and Processing
+	III. C. FHS Compliance
+	III. D.	Mapping Operations
+	III. E. Evaluating Recipes Against Maps 
+
+IV.     Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
+V.      RESERVED
+VI.     Recipes: A Beginning
+VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
+VIII.   Recipes: Quality Assurance through Unit Tests
+IX.     Recipes: Advanced Recipes for Building Clusters
+X.      User Management in deployShell
+XI.     Reserved
+XII.	Reserved
+XIII.	Reserved
+XIV.    Built-in Command Reference
+XV.     Add-On Command Reference
 
 	
 ================================================================================
