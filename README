@@ -650,17 +650,20 @@ By design, the deployShell is intended to comply with the Linux File Hierarchy
 Standard (FHS):
 
 	-----------------------------------------------------------------------
-	Path                                    Description
+	Path                                      Description
 	-----------------------------------------------------------------------
-	/usr/local/bin/deployShell              deployShell main file
-	/usr/local/lib/deployShell/*            supporting deployShell files
-	/etc/profile.d/deployShell.sh           deployShell profile extension
-	/etc/deployShell/deployShell.conf       main configuration file
-	/etc/deployShell/deployShell.d/*        supporting configurations
-	/var/log/deployShell.d/*                log directory
-	/var/lib/deployShell/cloudAccounts/*    cloud hosting accounts
-	/var/lib/deployShell/policies/*         deployment policies
-	/etc/cron.hourly/deployShellPE          deployShell policy enforcement
+	/usr/local/bin/deployShell                deployShell main file
+	/usr/local/lib/deployShell/*              supporting deployShell files
+	/etc/deployShell/deployShell.conf         main configuration file
+	/etc/deployShell.d/*                      supporting configurations
+	/etc/deployShell.d/profile.d/             deployShell profile extensions
+	/etc/deployShell.d/profile.d/profile	  global profile extension
+	/etc/deployShell.d/profile.d/userAdmin    userAdmin profile extension
+	/etc/deployShell.d/profile.d/hostingAdmin hostingAdmin profile extension
+	/etc/deployShell.d/profile.d/deployers    deployer users profile extension
+	/var/log/deployShell.d/*                  log directory
+	/var/lib/deployShell/cloudAccounts/*      cloud hosting accounts
+	/var/lib/deployShell/policies/*           deployment policies
 	-----------------------------------------------------------------------
 
 
