@@ -1,4 +1,4 @@
-=============================================================================
+================================================================================
       _            _              _____ _          _ _ 
      | |          | |            / ____| |        | | |
    __| | ___ _ __ | | ___  _   _| (___ | |__   ___| | |
@@ -7,7 +7,7 @@
   \__,_|\___| .__/|_|\___/ \__, |_____/|_| |_|\___|_|_|
             | |             __/ |                      
             |_|            |___/                       
-=============================================================================
+================================================================================
 
 The MIT License (MIT)
 
@@ -31,13 +31,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-=============================================================================
-                           Table of Contents
-=============================================================================
+================================================================================
+								   Table of Contents
+================================================================================
+
 
 	I.      Introduction
-	II.     Getting Started
+		I. A. 	What is deployShell?
+		I. B.	Why Adopt deployShell?
+
+	II.     Installing and Using deployShell
+		II. A.	Installation
+		II. B.	Getting Started
+		II. C.	Adding and Deleting Cloud-Provider Accounts
+		II. D.	Adding and Deleting Users
+		II. E.	Access Control Lists (User Permissions within deployShell)
+		II. F.	Basic Cloud Provider Management
+		II. G.	Creating, Listing and Deleting Server Instances.
+		II. H. 	Basic Recipes
+
 	III.    Architecture: An Overview
+
+		III. A.	The Shell User Interface.
+		III. B. FHS Compliance
+		III. C.	Shell Commands
+		III. D.	Mapping Operations
+		III. E. Evaluating Recipes Against Maps 
+
 	IV.     Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
 	V.      RESERVED
 	VI.     Recipes: A Beginning
@@ -52,27 +72,28 @@ THE SOFTWARE.
 	XV.     Add-On Command Reference
 
 	
-=============================================================================
+================================================================================
 I. 	Introduction
-=============================================================================
+================================================================================
 
-I. A. What is DeployShell?
 
-deployShell is an automation front-end intended to provide a single point of
-automation and interaction with multiple cloud-providers (e.g. Amazon AWS, 
-Digital Ocean, Google Compute Engine, Rackspace Cloud, etc.) such that an
-organization can deploy servers across vendors dynamically with lower lead
-times.
 
-Historically the idea of moving servers from one cloud provider to another 
-has been met with fear of outages and the dread that someone in operations 
-would have to script the automation of a new vendor's API, throwing away all
-past work.  From a management perspective, this translates to the cost of
-learning the new vendor's platform in addition to rewriting existing code.
+I. A.	What is DeployShell?
 
-The objective of deployShell is to build an open-source, simple, scalable and
-dependency-free platform for organizations ranging from the small startup to
-the enterprise.  This begins with the following design principles:
+The deployShell is an interactive user shell providing users with a means of 
+deploying cloud infrastructure (e.g. servers) across a wide variety of cloud 
+hosting providers through a recipe-based approach that is vendor agnostic.  The
+benefit is a centralized interface designed to interact with multiple cloud 
+providers through a single user-management and access control system, reducing 
+cost of operations and freeing companies from their Operations/IT departments.
+
+The business case for deployShell is more than building a more flexible 
+organization with an ability to rapidly deploy and iterate through full-stack 
+software builds.  deployShell also allows organizations to locate servers 
+strategically among the cloud providers in near-realtime for cost effectiveness
+as well as vendor and geographic diversity.
+
+This project embraces the following design principles:
 
     (1) Start with a common denominator and add no new deployment dependencies.
 
@@ -85,6 +106,10 @@ the enterprise.  This begins with the following design principles:
 
     (4) Keep it scalable.  The solution should be able to add new cloud
         providers with little pain or re-write.
+
+
+
+I. B.	Why Adopt deployShell?
 
 The first question one has to confront when introducing a new technology is 
 "Why not use [enter existing technology here]?"  In the case of deployment
@@ -104,250 +129,243 @@ as well as hypervisor deployments.  In the end, the deployShell offers the
 greatest potential for full-service deployment automation.
 
 
-II. B. DevOps: Opening the Shortest Path to Production
 
-The famous joke in software development is the software engineer shrugging and
-replying "It works on my machine" during a system outage.  Most of these issues
-are the result of bad practices within the developer environments.  Many coders
-simply move from project to project, coding against their laptop or workstation
-without ever stopping to clean their machine and prevent dependencies from one
-project from affecting another.  Moreover, programmers often work on their 
-local machines, blurring the lines between development tools and the software
-deliverable.  The result is a generation of bad blood between developers and
-frustrated systems administrators.  The solution is a uniform not just the 
-DevOps movement but a new, shorter path from idea to production.  This path is
-facilitated by a single deployment mechanism to allow applications to be 
-developed against "production-like" virtual environment then deployed as an 
-entire system stack to the target production environment using the exact same
-deployment code.  This is the path created by deployShell.
+I. B.	Use-Cases for deployShell 
 
-Development environments on the cloud are expensive.  Whether we are talking
-about Amazon, Google, Rackspace, etc., the cloud is expensive.  It is also not
-necessary when Operations teams can deploy development environments within the
-local network or on local laptops.  The scenario looks like this--
+I. B. 1.	Deploying "Fresh" Development/QA Environments
 
-    (1) OPERATIONS sets up deployShell for production deployments
+The famous joke in software development occurs from time to time when the
+software engineer shrugs and explains to the support/operations staff (or, god
+forbid, the customer) and says dismissively "It works on my machine."  For 
+everyone, including the software engineer, this answer is frustrating and 
+unacceptable.  Reducing this almost unavoidable eventuality is critical in 
+maintaining an organizations viability over the long haul.  deployShell 
+provides one strong answer.
+
+The root cause of most developer-to-production discrepancy is bad practice with
+respect to development and QA environments.  These environments are almost 
+always reused, especially in the startup world where time and skill are a 
+premium.  As a result these environments become unstable over time and require
+manual interventions to ensure systems work properly when they should simply be
+re-deployed from scratch before each use.
+
+In the "old days" (pre-cloud) this was not always possible unless a 
+considerable amount of time was spent building Ghost images, Ghost or PXE 
+servers, Kickstart files or other means of re-deploying bare metal systems.  
+Virtualization improved this situation some, but the "cloud" hosting paradigm 
+with per-hour pricing and out-of-the-box machine instantiation has made any 
+excuse against re-deployment a moot point.  
+
+Development and QA servers are often only used during business hours.  Assuming
+a twelve hour work day, this means that only 50% of the cost of a cloud-based 
+development or QA server is actually needed.  Companies are effectively spending
+their resources without any real benefit for 24x7 servers and these static, 
+often "dirty" development servers are causing real problems over time that cost
+even more money and efficiency.
+
+Organizations could instead use deployShell to automate their deployment and 
+destruction of development servers such that only those development environments
+which are needed are actually "spinning" at any given time.  When developers
+need an environment, they can deploy one within the established deployShell 
+user-privilege and automation policy framework.  As a result, each environment
+is maintained as a "fresh" environment for real work while the organization
+saves its cash for real growth.
+
+The objection most developers raise to the perpetual deployment is the latency
+between their request for an environment and the Operations' team's delivery of
+this environment.  The deployShell, however, eliminates the need for a large 
+Operations team in favor of granting the developer him/herself access to deploy
+servers within the user's allowed policy.  This policy may determine to which 
+cloud account a developer can deploy as well as the maximum lifetime and 
+operating hours of the server.  The Operations team shifts under this paradigm 
+to an audit-support-enabler role for the organization rather than an expensive 
+blocker to the development team.
+
+
+
+I. B. 2.	Deploying Flexible Production Environments
+
+The "cloud" promises to be cost effective.  However, most organizations have 
+seen that without flexible automation, its only benefit is transferring cost 
+from CapEx to OpEx on the financial statements.  For "cloud" to be cost 
+effective, the environments have to be vendor agnostic and flexible.  Pricing 
+should determine (in part) the vendor to be selected and more than one vendor 
+should be used to avoid costly downtime.  Additionally the automation for 
+deploying servers to the target environment must not become a leash held by the
+cloud hosting provider.
+
+When an organization chooses deployShell, it chooses to focus on the "recipes" 
+that create their solutions rather than satisfying and learning the vendor's API
+and billing ins and outs.  These recipes define the parameters of the server 
+machine as well as budget allowed per instance in addition to the instructions 
+needed to install/create the server instance regardless of the vendor selected.
+
+When a server is deployed, the deployShell uses its parameters to determine 
+server size, location based on the latest information pulled from each allowed 
+cloud-hosting provider's API.  This means that a single recipe can define a 
+server to be deployed, regardless of the target hosting provider.  As a network
+grows, or as customer base shifts geographic center, the server deployments can
+be shifted accordingly.  Further, as hosting costs change, servers can be 
+redeployed across the Internet to ensure efficiency as well as reliability and
+security.
+
+
+
+================================================================================
+II.     Installing and Using deployShell
+================================================================================
+
+
+
+II. A.	Installation
+
+The deployShell runs on top of any Debian 7+ or Ubuntu 14.04+ Server via a 
+simple install script.  The systems administrator only needs to execute the 
+following line to perform the install process:
+
+
+	curl -s 'https://github.com/x684867/installDeployShell/setup' | sudo bash
+
+
+This script will generate an SSH key to be used when connecting as the server
+administrator.  This key will be installed on the target server's default user
+(deploy@server.tld).
+
+
+
+II. B.	Getting Started
+
+After installing the deployShell, the systems administrator can log in via
+ssh using the following command--
+
+
+	ssh -i ~/.ssh/deployShellAdmin deploy@server.tld
+
 	
-    (2) OPERATIONS creates a git recipe repository for the organization.
+When the user connects as the deploy user under the deployShell, he/she will
+have elevated privileges for the system.  Nothing says the systems administrator
+has to do anything more than create a cloud-hosting account on the system for 
+one of the many supported platforms (e.g. Amazon AWS, Google GCE, etc.).  But
+the recommended best practice is to never use the deploy user account for 
+anything more than user and cloud-hosting account management (discussed below).
+
+The systems administrator should create user accounts for "user admins," 
+"hosting admins" and "deployers."  The "user admins" will have permission to 
+create and manage all user accounts and their related "deployment policies."  
+The "hosting admins" will have permission to create and manage cloud hosting 
+accounts.  A "deployer" user account will have permissions to create and manage
+server instances on their allowed cloud hosting accounts and under the 
+appropriate deployment policy.  
+
+Once the systems administrator has completed the above setup, he/she should 
+allow the "hosting admins" to create cloud hosting accounts while the "user 
+admins" create policy surrounding the deployment of servers.  Thereafter, 
+the "deployers" can begin developing recipes and deploying server instances.
+
+
+
+II. C.	Adding and Deleting Cloud-Provider Accounts
+
+
+
+II. D.	Adding and Deleting Users
+
+	II. D. 1. UserAdmins
 	
-    (3) DEVOPS creates basic environment recipes as the starting point.
+	II. D. 2. HostingAdmins
 	
-    (4) IT installs Parallels, virtualbox, VMware ESX, etc. depending on the
-        business need.
+	II. D. 3. Deployers
 	
-    (5) IT deploys virtual machines to QA and developer workstations and 
-        installs deployShell to these "local-deploy" VMs before connecting them
-        to the git recipe repository (the same one used by operations).
+	II. D. 5. Adding Role-based User Groups
 	
-    (6) DEVELOPMENT and QA can now use deployShell to pull from the develop and
-        QA branches of the recipe repository (according to their deployShell
-        configuration) and deploy mission-specific machines to their local
-        environments.
-		    
-    (7) As code evolves on the local development environment, DEVELOPMENT and
-        DEVOPS make changes to recipes in the develop branch of the recipe
-        repository.  DEVOPS and QA merge these changes into the QA branch
-        for testing.  Then when QA has passed the build, DEVOPS and OPERATIONS
-        can promote the recipe changes to the master branch and deploy the
-        software (as a complete stack) to production.
 
 
-=============================================================================
-II.	 Getting Started
-=============================================================================
+II. E.	Access Control Lists (User Permissions within deployShell)
 
-II. A. Dependencies
+	II. E. 1. Access Control Through Role-based User Groups
 
-The deployShell design demands that the software run on a small, low-cost 
-Linux server with as few dependencies as possible.  Accordingly the following
-list of dependencies that must be met should make any Systems Administrator
-smile:
+	II. E. 2. Access Control Through Policy Enforcement
 
-	*Debian 7 Linux ("Wheezy") or Ubuntu 12.04 x64 ("Precise")
-	*bash shell
-	*curl
-
-The deployShell install script will install everything else that is needed,
-but even then the list is intentionally short:
-
-	*git-core
-	*openSSH (client and server)
-	*awk
-	*sed
-	*grep
-	*cut
+	II. E. 3. Server Control Through Policy Enforcement
 
 
-II. B. Roadmap
+
+II. F.	Basic Cloud Provider Management
 
 
-    UPDATE: As of 13 July 2014, the installer is not available for public 
-            access.
 
-            
-II. B. 1. Development Roadmap
-
-The roadmap for this project is driven by two needs: (1) the needs of the 
-author's personal projects, and (2) the needs of the author's employer at the
-time.  This means that initial focus is on Digital Ocean.
+II. G.	Creating, Listing and Deleting Server Instances.
 
 
-II. B. 2. Targets:
-
-    2014-09-01  :   First Beta (supporting Digital Ocean)
-    	
-    2014-11-01  :   Second Beta (adding Google Compute)
-    	
-    2014-12-01  :   Third Beta (supporting Amazon AWS)
-    	
-    2015-(Q1)   :   Implement Dynamic Mapping?
-    	
-    2015-(Q2)   :   Implement DNS Management (via recipes)
-    	
-    2015-(Q3)   :   Implement "Cluster Recipes and Load Balancer support"
-    	
-    2015-(Q4)   :   Implement "Recipe inclusion within recipes"
-    	
-
-II. C. Installing deployShell
-
-    (1) To install deployShell--
-	
-        (1) Setup a Linux server (virtual machines on laptops are suitable).
-            The machine will never need more than 512MB RAM and most of this
-            is the operating system.  Disk size is determined by the number
-            of recipes the server will host.
-			
-        (2) Run the installer:
-				
-            curl -s http://FQDN_ommitted_for_now.tld/path/setup | sudo bash
-
-        (3) When prompted, answer the questions, which will include the domain
-            name used for the deployShell server, the name of the admin user
-            and so forth.
-			
-        (4) Get coffee.
-		
-        (5) Brag to coworkers/friends.  The bulk of the work is done.
-		
-    (2) Configuring deployShell recipe repository:
-	
-        (1) Execute "ssh user@server.tld 'attachRecipeRepo'"
-
-        (2) The system will ask for information needed to map the deployShell
-            to some remote repository.
-
-        (3) Celebrate.  It is done.
-
-    (3) Done.
-
-
-II. D. Deploying a Server (Overview)
-
-	There are three (3) steps to create a server with deployShell:
-	
-        (1) Create a deployment recipe (see II. E. "Creating a Recipe").
-
-        (2) Add a cloud-provider account to the deployShell server.
-		
-            ssh user@server.tld 'addCloudAccount myAccountName cloudProviderName'
-			
-            The deployShell will prompt the user for parameters specific to
-            the cloud provider's API and generate an account file.
-		
-        (3) Execute createServer to apply the recipe.
-		
-            ssh user@server.tld 'createServer cloudProviderName myRecipeName'
-			
-        (4) The deployShell will return its pass/fail and diagnositic 
-            information when it is done.
-
-
-II. E. Creating Server Recipes
-
-		NEED CONTENT
+II. H. 	Basic Recipes
 
 
 =============================================================================
 III.	 Architecture: An Overview
 =============================================================================
 
-deployShell is based on the following abstraction model.  The purpose of the 
-model is to "keep it scalable."  Each layer should be interchangeable with 
-updated code over time in order to support new cloud vendors or new features
-without a major software overhaul.
 
 
-	+---------------------------------------------------------------+
-	| deployShell Abstraction Model                                 |
-	+---------------------------------------------------------------+
-	|                       deployShell User                        |
-	|                          |   |     |                          |
-	|                          V   |     V                          |
-	|  deployShell Add-on Commands | deployShell Built-in Commands  |
-	|             |                |                |               |
-	|             V                |                V               |
-	|   deployShell API Commands   | deployShell Server Environment |
-	|             |                |                                |
-	|             V                |                                |
-	|   deployShell API Mappings   +--------------------------------+ 
-	|             |                |
-	|             V                |
-	|  deployShell API Interfaces  |
-	|             |                |
-	|             V                |
-	|    Cloud Provider API        |
-	|             |                |
-	|             V                |
-	|      Cloud Provider          |
-	+------------------------------+
+III. A.	The Shell User Interface.
+
+The deployShell is an interactive shell just like bash, csh, zsh or even the
+DOS command line.  The interactive shell is intended to allow many users to 
+connect via key-based SSH and manage distributed cloud environments.  The shell
+is written in Python with curses providing screen management.  User activity 
+is logged through logger.py for in-depth audit trails.
+
+Each user account for the deployShell is a standard Linux user.  The user's
+shell in /etc/passwd is defined as /opt/deployShell/deployShell.  Each user has
+a home directory in /home/<username> with a default .profile file located 
+therein.  This Linux-integration makes the system more efficient to deploy and
+maintain within the POSIX/FHS standards.
 
 
 
-III. A. deployShell API Interfaces
+III. B. FHS Compliance
 
-The rubber meets the road in deployShell with the "API Interfaces."  These are
-the software objects (functions) which translate a deployShell API command
-into a vendor-specific API action.
+By design, the deployShell is intended to comply with the Linux File Hierarchy
+Standard (FHS):
 
-For example, when the user calls createServer, the API interface must take the
-generic 'createServer' command and create a server on a vendor specified in
-the recipe file.  This requires the API command createServer to load the recipe
-and determine which vendor-specific API interface is appropriate.  But then
-when it calls the API interface function createServer(), this function must
-translate deployShell recipe artifacts (image, dataCenter,serverSize, etc.)
-into the vendor specific language (see "API Mappings") and then call the vendor
-API to create the actual server instance.
+	-----------------------------------------------------------------------
+
+	 /usr/local/
+		|
+		|
+		+--/usr/local/bin/deployShell (deployShell main file)
+		|
+		+--/usr/local/lib/deployShell/*	  (supporting deployShell files)
+		| 
+		+--/etc/profile.d/deployShell.sh  (deployShell profile extension)
+		|
+		+--/etc/deployShell/deployShell.conf (main configuration file)
+		|
+		+--/etc/deployShell/deployShell.d/*   (supporting configurations)
+		|
+		+--/var/log/deployShell.d/*	(log directory)
+		|
+		+--/var/lib/deployShell/cloudAccounts/*	(cloud hosting accounts)
+		| 
+		+--/var/lib/deployShell/policies/*  (deployment policies)
+		|
+		+--/etc/cron.hourly/deployShellPE	(deployShell policy enforcement)
+			
+	-----------------------------------------------------------------------
 
 
-III. B. deployShell API Mappings
 
-There is no common language in cloud to identify operating system image name,
-data center name/region, server size/capacity, etc.  The lack of an open 
-standard for such requires deployShell to map a generic definition of these
-concepts into vendor-specific language.  For example, one vendor might call
-an Ubuntu 14.04 x64 image "ubuntu1404x64" while another uses a numeric ID.
-deployShell must translate these discrete naming systems into a common 
-language so as to free the user from vendor lock-in.
+III. C.	Shell Commands
 
 
-III. C. deployShell API Commands
 
-deployShell cannot support every feature of every vendor.  That is not the
-purpose of deployShell, though features may be added in time.  The objective
-is to provide common-denominator operations.  These are the operations which
-are common to ALL supported cloud providers and they include--
 
-	1. createServer
-	2. deleteServer
-	3. listServers
+III. D.	Mapping Operations
 
-The reader might notice that "restartServer" is not on the above list.  This
-is by design.  The "cloud" paradigm (defined as disposable, elastically
-scalable systems deployed for the duration of their usefulness) would hold 
-that "cloud servers" are not maintained in the traditional model.  They are
-created and deleted.  Their recipes (or blue prints) are maintained while 
-the server itself is simply redeployed when trouble arises.
+
+
+III. E. Evaluating Recipes Against Maps 
+
+
 
 
 =============================================================================
@@ -397,6 +415,7 @@ create a vendor- and domain-specific map file (also in conf/mapping) which
 bears the name of the cloud vendor and account as well as the type of map,
 e.g. 
 
+
     +-----------------------------------------+-----------------------------+
     |Map File Path                            |Description                  | 
     +-----------------------------------------+-----------------------------+
@@ -410,6 +429,7 @@ e.g.
     |      a map that pertains to the cloud hosting provider and its local  |
     |      account configuration file as well as to the map type (domain).  |
     +-----------------------------------------------------------------------+
+
 
 Because vendor-specific API interface code must access the local resource maps
 during the mapping process, a common Python library (mapHandlers.py) exists
