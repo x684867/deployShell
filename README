@@ -46,9 +46,8 @@ THE SOFTWARE.
 		II. C.	Adding and Deleting Cloud-Provider Accounts
 		II. D.	Adding and Deleting Users
 		II. E.	Access Control Lists (User Permissions within deployShell)
-		II. F.	Basic Cloud Provider Management
-		II. G.	Creating, Listing and Deleting Server Instances.
-		II. H. 	Basic Recipes
+		II. F.	Creating, Listing and Deleting Server Instances.
+
 
 	III.    Architecture: An Overview
 
@@ -554,22 +553,66 @@ was put into an enforcing state.]
 
 II. E.	Access Control Lists (User Permissions within deployShell)
 
-	II. E. 1. Access Control Through Role-based User Groups
+II. E. 1. Access Control Through Role-based User Groups
 
-	II. E. 2. Access Control Through Policy Enforcement
+The recommended best practice (enforced by deployShell design) is to apply 
+security at the role-based group level.  This prevents one-time user-level
+permission grants from creating security and functionality problems down the
+road.  To that effect, all security is applied first at the "role designation" 
+level of account creation when a user is designated as a "user admin," "hosting
+admin" or "deployer."  This is then carried forward by allowing user admins to
+create groups of "deployer" user accounts which can be managed by policy.
 
-	II. E. 3. Server Control Through Policy Enforcement
+The vision is that the "user admin" is not necessarily a technical person.  For
+that matter, even the "hosting admin" does not need to be a very technical 
+employee within an organization.  The two roles could be divided among human
+resources (for user admin privileges) and finance (for hosting admin privileges)
+with the deployers being the engineers creating the technology behind the 
+organization.
+
+Further, the separation of duties in deployShell prevents the "user admin" from
+also being a "hosting admin" so that there is less likelihood of fraud within or
+error within an organization.  For this reason, the "deployer" cannot also be an
+admin (for either user or hosting).  While policy may become technical within 
+the recipes created by deployers, the polices created and enforced by user and
+hosting admins only relate to the financial and legal side of the business.
 
 
 
-II. F.	Basic Cloud Provider Management
+II. E. 2. Access Control Through Policy Enforcement
 
-	
+User admins might create and enforce specific policies that limit to which 
+servers a given user might have access.  Likewise, the user admin may limit to 
+which accounts a deployer can deploy environments (separating development from
+QA and production environments).  This form of access control is maintained at
+the group level to avoid oversight, errors and any discrimination against a
+particular person.  One might say that the purpose of deployShell is not only
+to automate deployment but to keep the organization's security practices above
+board.
 
-II. G.	Creating, Listing and Deleting Server Instances.
 
 
-II. H. 	Basic Recipes
+II. E. 3. Server Control Through Policy Enforcement
+
+Policy is enforced against cloud accounts by the hosting admins.  This means a
+given recipe may request certain resources that are outside of policy.  Rather
+than finding out that the server was excessive during the next billing cycle
+policy would prevent the recipe from ever finding a hosting solution among the
+available accounts.
+
+But server control through policy enforcement also allows the server's lifespan
+and operating hours or scalability to be limited.  The recipe could define that
+the server has other server dependencies.  If those dependencies are not met or
+attainable, the recipe cannot be processed (again mitigating risk and waste).
+
+Additionally, policy definitions can limit the operating hours of a given server
+based on its current deployment state.  For example, a development server may 
+only run during business hours.  A QA server likewise.  Additionally the 
+development server may only be allowed to last through the current 14 day sprint
+before it must be re-deployed, ensuring quality of the environment.
+
+
+II. F.	Creating, Listing and Deleting Server Instances.
 
 
 =============================================================================
