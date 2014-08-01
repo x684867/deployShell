@@ -647,28 +647,17 @@ By design, the deployShell is intended to comply with the Linux File Hierarchy
 Standard (FHS):
 
 	-----------------------------------------------------------------------
-
-	 /usr/local/
-		|
-		|
-		+--/usr/local/bin/deployShell (deployShell main file)
-		|
-		+--/usr/local/lib/deployShell/*	  (supporting deployShell files)
-		| 
-		+--/etc/profile.d/deployShell.sh  (deployShell profile extension)
-		|
-		+--/etc/deployShell/deployShell.conf (main configuration file)
-		|
-		+--/etc/deployShell/deployShell.d/*   (supporting configurations)
-		|
-		+--/var/log/deployShell.d/*	(log directory)
-		|
-		+--/var/lib/deployShell/cloudAccounts/*	(cloud hosting accounts)
-		| 
-		+--/var/lib/deployShell/policies/*  (deployment policies)
-		|
-		+--/etc/cron.hourly/deployShellPE	(deployShell policy enforcement)
-			
+	Path									Description
+	-----------------------------------------------------------------------
+	/usr/local/bin/deployShell 				deployShell main file
+	/usr/local/lib/deployShell/*			supporting deployShell files
+	/etc/profile.d/deployShell.sh			deployShell profile extension
+	/etc/deployShell/deployShell.conf		main configuration file
+	/etc/deployShell/deployShell.d/*		supporting configurations
+	/var/log/deployShell.d/*				log directory
+	/var/lib/deployShell/cloudAccounts/*	cloud hosting accounts
+	/var/lib/deployShell/policies/*  		deployment policies
+	/etc/cron.hourly/deployShellPE			deployShell policy enforcement
 	-----------------------------------------------------------------------
 
 
@@ -811,16 +800,16 @@ IV. C. 1. Location Map JSON Structure
 Location maps create geographic regions to which deployShell can deploy 
 infrastructure.  These geographic regions are described by--
 
-	+----+------------------------------------------------------------------+
-	|Loc | A "friendly name" the recipe set can use to define the data      |
-	|    | center.                                                          |
-	+----+------------------------------------------------------------------+
-	|desc| A "description" of the location for human-readable purpose.      |
-	+----+------------------------------------------------------------------+
-	|long| The longitude of the region's center of mass.                    |
-	+----+------------------------------------------------------------------+
-	|lat | The latitude of the region's center of mass.                     |
-	+----+------------------------------------------------------------------+
+	+----+----------------------------------------------------------------+
+	|Loc | A "friendly name" the recipe set can use to define the data    |
+	|    | center.                                                        |
+	+----+----------------------------------------------------------------+
+	|desc| A "description" of the location for human-readable purpose.    |
+	+----+----------------------------------------------------------------+
+	|long| The longitude of the region's center of mass.                  |
+	+----+----------------------------------------------------------------+
+	|lat | The latitude of the region's center of mass.                   |
+	+----+----------------------------------------------------------------+
 	
 The original location map is shown below:
 
@@ -1054,8 +1043,8 @@ a recipe to be processed from text file into a running server instance.
 V. A. Dynamic Feed Job: SizeFeedProcessor
 
 The first "dynamic feed job" is the "sizeFeedProcessor" which downloads feeds 
-from all of the enabled cloud hosting providers.  This job executes the following
-process:
+from all of the enabled cloud hosting providers.  This job executes the 
+following process:
 
     (1) Determine the list of enabled cloud provider API.
   
@@ -1089,20 +1078,21 @@ more complex process than V. A.:
                (conf/mappings/location.raw).
     
     (4) Iterate through the temporary map file for each data center:
-        (4)(a) Spawn a mapping thread (locationFeedMapper) to geolocate the data
-               data centers and return the appropriate deployShell region string.
+        (4)(a) Spawn a mapping thread (locationFeedMapper) to geolocate the 
+        	   data centers and return the appropriate deployShell region 
+               string.
    
-    (5) Update the temporary map file with the data center locations and when all
-        are updated, copy conf/mappings/location.raw to conf/mappings/locations
-        and delete the raw file.
+    (5) Update the temporary map file with the data center locations and when 
+    	all are updated, copy conf/mappings/location.raw to conf/mappings/
+    	locations and delete the raw file.
 
 
 V. C. Dynamic Feed Job: ImageFeedProcessor
 
-Image feeds are mapped by the ImageFeedProcessor which downloads the list of all
-possible images provided by a hosting provider before mapping them to the generic
-deployShell nomenclature.  Of the mapping processes, this one is the most simple
-to document:
+Image feeds are mapped by the ImageFeedProcessor which downloads the list of 
+all possible images provided by a hosting provider before mapping them to the 
+generic deployShell nomenclature.  Of the mapping processes, this one is the 
+most simple to document:
 
     (1) Determine the list of enabled cloud provider API.
     (2) Iterate through the list for each element.
@@ -1112,13 +1102,13 @@ to document:
 
 V. D. Dynamic Feed Job Schedule
 
-The feed job schedule executes under the deploy user's crontab, limiting the job's
-potential permissions to that of deploy for security reasons.  Each of these jobs 
-are built-in and perform only the tasks described above.  But from time to time a
-systems administrator may want to enable/disable the feed jobs (for example, to 
-avoid a deployShell outage when the feeds fail to update during a network outage,
-a systems administrator may decide to disable the schedule, among other reasons.
-To do this, the sysadmin simply executes:
+The feed job schedule executes under the deploy user's crontab, limiting the 
+job's potential permissions to that of deploy for security reasons.  Each of 
+these jobs are built-in and perform only the tasks described above.  But from 
+time to time a systems administrator may want to enable/disable the feed jobs 
+(for example, to avoid a deployShell outage when the feeds fail to update 
+during a network outage, a systems administrator may decide to disable the 
+schedule, among other reasons.  To do this, the sysadmin simply executes:
 
         disableFeedJobSchedule
         
