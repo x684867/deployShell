@@ -53,8 +53,8 @@ THE SOFTWARE.
 	III.    Architecture: An Overview
 
 		III. A.	The Shell User Interface.
-		III. B. FHS Compliance
-		III. C.	Shell Commands
+		III. B. Command Structure and Processing
+		III. C. FHS Compliance
 		III. D.	Mapping Operations
 		III. E. Evaluating Recipes Against Maps 
 
@@ -235,6 +235,9 @@ administrator.  This key will be installed on the target server's default user
 
 II. B.	Getting Started
 
+
+II. B. 1.	Configuring the New Server
+
 After installing the deployShell, the systems administrator can log in via
 ssh using the following command--
 
@@ -243,41 +246,310 @@ ssh using the following command--
 
 	
 When the user connects as the deploy user under the deployShell, he/she will
-have elevated privileges for the system.  Nothing says the systems administrator
-has to do anything more than create a cloud-hosting account on the system for 
-one of the many supported platforms (e.g. Amazon AWS, Google GCE, etc.).  But
-the recommended best practice is to never use the deploy user account for 
-anything more than user and cloud-hosting account management (discussed below).
+have elevated privileges for the system.  The systems administrator should then 
+execute the following command to configure the server--
 
-The systems administrator should create user accounts for "user admins," 
-"hosting admins" and "deployers."  The "user admins" will have permission to 
-create and manage all user accounts and their related "deployment policies."  
-The "hosting admins" will have permission to create and manage cloud hosting 
-accounts.  A "deployer" user account will have permissions to create and manage
-server instances on their allowed cloud hosting accounts and under the 
-appropriate deployment policy.  
+	server.configure --interactive
+	
+This will provide an interactive setup wizard to assist the administrator in
+configuring email, authentication and other system-level aspects of the server.
+The wizard will also allow the systems administrator to configure the initial
+"user admin" and "hosting admin" accounts.  These users will then be emailed by
+the system with their log in credentials.
 
-Once the systems administrator has completed the above setup, he/she should 
-allow the "hosting admins" to create cloud hosting accounts while the "user 
-admins" create policy surrounding the deployment of servers.  Thereafter, 
-the "deployers" can begin developing recipes and deploying server instances.
+NOTE: Once the "server.configure" command completes and the administrator user
+logs out, deployShell will delete the private SSH key associated with the deploy
+user, preventing any person from ever logging in as this user going forward.
+This is a security feature intended to enforce user best practices moving on.
+
+
+II. B. 2.	Basic User-Account Roles
+
+The deployShell has three (3) basic user roles (not including the initial deploy
+user account used to configure the system):
+
+	"user admin"
+	"hosting admin"
+	"deployer"
+	
+The "user admin" is the group of users who create and manage all user accounts
+on the system.  This includes creating user groups and user-focused policies as
+well as applying system policies to the user groups.  (NOTE: policies are not
+enforced on a user-by-user basis but on a group-basis.)
+
+The "hosting admin" is the group of users who create and manage cloud provider
+accounts used to connect to the hosting providers' various API.  This includes
+creating and applying use policies to the cloud hosting accounts.  (NOTE: The
+hosting policies are applied account-by-account to the cloud hosting providers
+by the hosting admin either globally or "perUserGroup."  The hosting admin then
+can control the behavior of user groups while the user admin controls to which
+groups users belong or which groups exist.
+
+The "deployer" is the group of end users created by the user admin.  These are
+the users who are allowed through policy to create infrastructure (e.g. server 
+instances) on the various cloud hosting provider accounts. 
 
 
 
 II. C.	Adding and Deleting Cloud-Provider Accounts
 
+This section covers "cloud-provider accounts."  A "cloud provider" is a vendor
+such as Amazon AWS, Google Compute Engine, Digital Ocean, Rackspace or even an 
+internal enterprise virtualization infrastructure.  In this section, deployShell
+commands will be covered that help the "hosting admin" users connect their
+existing cloud hosting accounts to the deployShell command and control software.
+
+
+
+II. C. 1. Creating Cloud Hosting Accounts
+
+Cloud hosting accounts must be created through the respective cloud hosting 
+provider's unique mechanism.  Instructions for each provider are given during
+the execution of the addCloudProviderAcct command--
+
+
+	cloudProvider.account.add myAccountName amazonAWS
+	
+	
+Executing the above command will create a deployShell account file with the name
+"myAccountName" using the deployShell-AmazonAWS API interface module.  This 
+module will provide all AmazonAWS-specific content, instructions and automation.
+
+
+	Note: By design creating cloud-provider accounts is a manual activity.
+	While it was considered to make this a "silent" command which could be
+	automated for a rapid deployment of accounts, the use-case did not 
+	really exist.  The reader is encouraged to provide feedback on any 
+	specific use case where rapid and frequent account creation is 
+	considered appropriate.
+
+
+
+II. C. 2. Associating Cloud-Hosting Accounts with Policies
+
+Once a cloud-provider account is established (II.C.1) the account exists as a 
+file on the deployShell server file system in a "disabled" state.  The account
+cannot be used until it is enabled (II.C.3).  This gives the "hosting admin" an
+opportunity to first associate the account with any use policy files.
+
+Policy files allow the hosting admin to set limits on who can use a given cloud
+provider account and how.  Currently only the who and how many machines limits
+are in place but the long term goal is to allow a hosting admin to set budget,
+performance, geography and other limitations.  These policy constraints can help
+an organization to better manage and account for resource usage.
+
+To associate an account with a policy, the hosting admin would execute--
+
+
+	cloudProvider.account.policyApply myAccountName myPolicyName enforce
+
+	
+When a policy is applied to an account, the policy is effective prospectively.
+This is important since it means that any pre-existing servers or infrastructure
+will not be removed by the policy.  Only new assets will be prevented from being
+created once the policy is in place.  However, a hosting admin can audit the 
+account for policy violations to determine what pre-existing environments exist
+that would violate the policy:
+
+
+	cloudProvider.account.policyAudit myPolicyName
+
+	
+Because cloud account policies could cause significant problems in a flexible 
+and mature cloud infrastructure, there is (as illustrated, above) an "enforce"
+argument passed to "policyApply."  This is an optional argument.  By default,
+the command assumes "passive" and only applies the policy in a passive mode that
+has no actual effect on operations.  Thus a hosting admin could execute--
+
+
+	cloudProvider.account.policyApply myAccountName myPolicyName passive
+
+	
+Then, in a passive policy mode, the hosting admin could use "policyAudit" to 
+inspect the likely effects the policy would have before enabling the policy:
+
+
+	cloudProvider.account.enforcePolicy myPolicyName
+
+	
+This can later be disabled by executing--
+
+
+	cloudProvider.account.relaxPolicy myPolicyName
+
+A policy can be dissociated from a cloud-provider account using--
+
+	
+	cloudProvider.account.removePolicy myAccountName myPolicyName
+	
+	
+This would both disable and remove the policy association and any constraints it
+implies.
+
+
+
+II. C. 3. Enabling/Disabling Cloud-Hosting Accounts
+
+Once a hosting admin is satisfied that the cloud-provider account is properly
+configured, the same can be brought online when the hosting admin executes--
+
+
+	cloudProvider.account.enable myAccountName
+
+
+The account can later be disabled by executing--
+
+
+	cloudProvider.account.disable myAccountName
+	
+
+Disabling a cloud provider account is prospective only.  It will not remove or
+otherwise affect any existing infrastructure.  It will only prevent deployers 
+from creating new assets under this account.  The hosting provider can list the
+assets on the account and determine the best course of action.  See II.G. for
+more instructions on how to create, list and delete server instances.
+
+
+
+II. C. 4. Deleting Cloud Hosting Accounts
+
+The hosting admin can also delete an account by executing--
+
+	
+	cloudProvider.account.delete myAccountName
+	
+
+Deleting a cloud hosting account is only possible if deployShell sees no active
+assets on the account.  If there are any server instances or other assets active
+on a given cloud-hosting account, it *will not* delete the account.  This is by
+design because account deletion dissociates deployShell from the cloud hosting
+account completely.  That is, once an account is deleted, no further API
+communication is possible.
+
 
 
 II. D.	Adding and Deleting Users
 
-	II. D. 1. UserAdmins
+II. D. 1. Creating a New User Account
+
+Users in the deployShell environment are Linux users on its server.  This allows
+the deployShell to leverage SSH, PAM and other existing authentication and user
+management features for deployShell.  The only difference between a deployShell
+user and a standard Linux user (from the perspective of the Linux operating
+system) is the shell defined in /etc/passwd.  However, it is not advised for a
+system administrator to create deployShell users through the Linux user 
+management mechanisms.  There are deployShell-specific assets created and linked
+during user creation which would not exist if the user account were created by
+the Linux useradd or other command.
+
+To create a new user account, either the systems administrator or a user admin
+must log into the deployShell server and execute the following command--
+
+
+	user.create <role> userName email@myFQDN.tld  "<sshPublicKeyString>"
 	
-	II. D. 2. HostingAdmins
+This command would create a new user with the specified role (e.g. deployer,
+userAdmin, hostingAdmin and provide both an email address and SSH public key for
+authenticating the user into the system.
+
+
+
+II. D. 2. LDAP/OAUTH Authentication
+
+Currently (under version 0.01), only SSH-key authentication against a local 
+key is supported by the DeployShell.  However, there are long-range plans to
+support multifactor authentication via LDAP/OAUTH once the system's core 
+features are completed.
+
+
+
+II. D. 3. Adding User Groups
+
+The user admin can create groups for managing users on a role-by-role basis by
+executing--
+
+
+	group.create groupName
+
 	
-	II. D. 3. Deployers
+The users can then be added to this group by executing--
+
+
+	group.addUser groupName myUsername
+
+
+Batches of users can be added by executing--
+
+
+	group.addUsers groupName "<comma-delimited list of usernames>"
 	
-	II. D. 5. Adding Role-based User Groups
+
+Once the group is added, it will appear to both the user and hosting admins when
+they execute--
+
 	
+	group.list
+	
+	
+This command will list all groups in the system.  However, the hosting admins
+will not have access to which uses are members of which groups (a feature for
+added security).  They can only see the names of the groups in order to attach
+their hosting policies to these groups.  But user admins can execute the 
+following to see the members in a given group:
+
+
+	group.members groupName
+
+
+The user admins can also remove users from a group--
+
+	
+	group.removeUser myGroupName myUserName
+	
+
+And the user admin can delete the group entirely (and all of its memberships
+will be removed--
+
+
+	group.delete myGroupName
+
+	
+However, a user group cannot be deleted until the hosting admins have removed 
+all policies attached to the same by executing--	
+
+
+	group.removePolicy myGroupName myPolicyName
+	
+	
+Policy is applied to the group by executing--
+
+
+	group.addPolicy myGroupName myPolicyName [enforce|passive]
+
+
+Note that the addPolicy command will allow the user admin to apply policy to a
+group in either an "enforce" or "passive" mode.  In an "enforce" mode, the user
+is actively constrained by the policy.  However in a passive mode, the user is
+not constrained but violations of the policy are logged and may be audited.
+
+Only the user admins can create and delete groups of users and assign their
+memberships and only hosting admins can create and apply policy.  But both user
+and hosting admins can see the effect of their actions by auditing a group-to-
+policy assignment using--
+
+	
+	group.auditPolicy myGroupName
+	
+
+The above command will return the list of policy violations in the logs that are
+observed under the policy.  This not only allows for a non-intrusive observation
+of a deployer's deviation from policy expectation.  It allows for a means of 
+pre-testing the policy's effect on the user before committing it into action.
+
+[NOTE: All policy is prospective and not retroactive.  Non-enforced policy will
+not have a retrograde effect on actions taken prior to the time when the policy
+was put into an enforcing state.]
+
 
 
 II. E.	Access Control Lists (User Permissions within deployShell)
@@ -292,7 +564,7 @@ II. E.	Access Control Lists (User Permissions within deployShell)
 
 II. F.	Basic Cloud Provider Management
 
-
+	
 
 II. G.	Creating, Listing and Deleting Server Instances.
 
@@ -321,8 +593,12 @@ therein.  This Linux-integration makes the system more efficient to deploy and
 maintain within the POSIX/FHS standards.
 
 
+III. B. Command Structure and Processing
 
-III. B. FHS Compliance
+
+
+
+III. C. FHS Compliance
 
 By design, the deployShell is intended to comply with the Linux File Hierarchy
 Standard (FHS):
@@ -354,7 +630,6 @@ Standard (FHS):
 
 
 
-III. C.	Shell Commands
 
 
 
