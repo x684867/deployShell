@@ -38,8 +38,8 @@ Table of Contents
 
 I.      Introduction
 
-	I. A. 	What is deployShell?
-	I. B.	Why Adopt deployShell?
+I. A. 	What is deployShell?
+I. B.	Why Adopt deployShell?
 
 
 II.     Installing and Using deployShell
@@ -54,11 +54,11 @@ II. F.	Creating, Listing and Deleting Server Instances.
 
 III.    Architecture: An Overview
 
-	III. A.	The Shell User Interface.
-	III. B. Command Structure and Processing
-	III. C. FHS Compliance
-	III. D.	Mapping Operations
-	III. E. Evaluating Recipes Against Maps 
+III. A.	The Shell User Interface.
+III. B. Command Structure and Processing
+III. C. FHS Compliance
+III. D.	Mapping Operations
+III. E. Evaluating Recipes Against Maps 
 
 IV.     Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
 V.      RESERVED
@@ -67,12 +67,6 @@ VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
 VIII.   Recipes: Quality Assurance through Unit Tests
 IX.     Recipes: Advanced Recipes for Building Clusters
 X.      User Management in deployShell
-XI.     Reserved
-XII.	Reserved
-XIII.	Reserved
-XIV.    Built-in Command Reference
-XV.     Add-On Command Reference
-
 	
 ================================================================================
 I. 	Introduction
@@ -1233,25 +1227,6 @@ X. F.   Listing deployShell Users
 
 
 
-=============================================================================
-XI.     Reserved
-=============================================================================
-
-=============================================================================
-XII.    Reserved
-=============================================================================
-
-=============================================================================
-XIII.   Reserved
-=============================================================================
-
-=============================================================================
-XIV.    Built-in Command Reference
-=============================================================================
-
-=============================================================================
-XV.     Add-On Command Reference
-=============================================================================
 
 
 				

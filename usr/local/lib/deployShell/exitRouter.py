@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#	deployShell.py
+#	exitRouter.py
 #
 # The MIT License (MIT)
 #
@@ -24,6 +24,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# This is the main application file.
-#
-from commandRouter import commandRouter
+import sys
+
+class exitRouter:
+	def __init__(self):
+		pass
+	
+	def __del__(self):
+		pass
+		
+	def __exit__(self):
+		#
+		# Terminate application
+		#
+		sys.exit(0)
+		
+	

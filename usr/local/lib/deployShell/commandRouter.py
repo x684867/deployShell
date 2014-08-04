@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#	deployShell.py
+#	commandRouter.py
 #
 # The MIT License (MIT)
 #
@@ -24,6 +24,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# This is the main application file.
+# This file creates a command router.
 #
-from commandRouter import commandRouter
+from shellUI import shellUI
+from exitRouter import exitRouter
+
+class commandRouter(exitRouter):
+	
+	def __init__(self):
+		pass
+	
+	def __del__(self):
+		pass
+	
+	def interact(self,motd="commandRouterMOTD"):
+		ui=shellUI(motd)
+		#
+		#
+		#
+		#
+	
+	def route(self,token):
+		if token.command=="help":
+			self.help(token)
+		elif token.command=="quit":
+			self.exit(token)
+		elif token.command=="exit":	
+			self.exit(token)

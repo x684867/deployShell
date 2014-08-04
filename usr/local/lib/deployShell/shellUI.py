@@ -29,7 +29,6 @@ from logger import logger
 from shellUIinput import shellUIinput
 from commandParser import commandParser
 
-
 class shellUI(shellUIinput):
 	__parser=commandParser()
 	__log=None
