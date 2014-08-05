@@ -65,7 +65,7 @@ IV. 	Command Reference.
 IV. A.	Namespace: None (General Commands)
 
 
-V.		Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
+V.      Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
 
 
 VI.     Recipes: A Beginning
@@ -856,15 +856,17 @@ IV. C. 1.	COMMAND: cloudProvider.account.policyApply acctName polName
 	Optional Arguments:
 		
 		--passive
-					A --passive flag relaxes the enforcement state of the policy
-					file so that it can only be used by the audit utility to 
-					determine violation but not actually enforce against the
-					same.
+		
+        A --passive flag relaxes the enforcement state of the policy
+        file so that it can only be used by the audit utility to 
+        determine violation but not actually enforce against the
+        same.
 					
 		--enforce
-					An --enforce flag places the policy into an enforcing state
-					so that the policy will actively prevent users from acting
-					in any way that violates the same.
+        
+        An --enforce flag places the policy into an enforcing state
+        so that the policy will actively prevent users from acting
+        in any way that violates the same.
 	
 	
 
