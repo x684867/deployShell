@@ -1057,7 +1057,7 @@ Map names should observe the following conventions:
 	    and hyphen) but no spaces or other characters.
 
 
-IV. A. Standardized Mapping API Interface Structures
+V. A. Standardized Mapping API Interface Structures
 
 Each API Interface is substantially different internally as it must confront a
 different API interaction problem as well as a different data-transformation
@@ -1076,7 +1076,7 @@ spectrum of cloud providers, to wit:
         in the api//bin/ directory.
 
 
-IV. B. Integrating API Interface Structures into the deployShell System
+V. B. Integrating API Interface Structures into the deployShell System
 
 Most of the functionality of deployShell is driven by user interaction with 
 the system's main shell script (~/deployShell/deployShell).  However feed
@@ -1095,14 +1095,14 @@ will setup and route the work to the appropriate vendor API interface with
 the correct vendor-specific parameters (e.g. tokens).
 
 
-IV. C. Local Resource Map Structures
+V. C. Local Resource Map Structures
 
 Local resource map files are found in conf/mapping/ and are written in JSON
 as a single, domain-specific object.  Each file consists of a header and a
 map array containing the location objects.
 
 
-IV. C. 1. Location Map JSON Structure
+V. C. 1. Location Map JSON Structure
 
 Location maps create geographic regions to which deployShell can deploy 
 infrastructure.  These geographic regions are described by--
@@ -1140,7 +1140,7 @@ The original location map is shown below:
 
 
 
-IV. C. 2. Size Map JSON Structure
+V. C. 2. Size Map JSON Structure
 
 So-called "Size" maps describe resource constraints for servers created with the
 deployShell system.  Factors considered here include CPU speed, core count, RAM
@@ -1215,10 +1215,10 @@ what size-resource objects may be considered in a recipe.
 
 
 
-IV. C. 3. Image Map JSON Structure
+V. C. 3. Image Map JSON Structure
 
 	
-IV. B. Mapping Location
+V. B. Mapping Location
 
 Mapping location of data centers where the server instances will run is the
 easiest of the three mapping types.  Yet it is neither an exact science nor
@@ -1257,7 +1257,7 @@ data center regions are mapped manually by an arbitrary process since the data
 centers supported are sufficiently distant from one another.
 
 
-IV. B. Mapping Images
+V. B. Mapping Images
 
 Mapping operating system images in deployShell is a little more than simply
 measuring the distance between two points and dropping the result in a bucket.
@@ -1275,7 +1275,7 @@ images.  This will require periodic "pruning" of image maps in some later
 version.  As with other mapping problems, this is currently a manual process.
 
 
-IV. C. Mapping Sizes
+V. C. Mapping Sizes
 
 Server instance sizes determine cost as well as technology resources.  The 
 variations are wide ranging and ever-changing.  A static mapping of server size
@@ -1325,12 +1325,10 @@ the following:
 	-----------------------------------------------------
 
 
-IV. D. Reading and Writing Map Files
+V. D. Reading and Writing Map Files
 
 
-=============================================================================
-V. Mapping: Dynamic Feeds and Mapping
-=============================================================================
+V. E. Mapping: Dynamic Feeds and Mapping
 
 In order to create maps between abstract deployShell terms and those of the
 many cloud hosting providers and their API, software must exist which will
@@ -1347,7 +1345,7 @@ it reduces the network load of requesting information each time a recipe is
 processed.  It also reduces the deployment latency (i.e. the time required for
 a recipe to be processed from text file into a running server instance.
 
-V. A. Dynamic Feed Job: SizeFeedProcessor
+V. E. 1. Dynamic Feed Job: SizeFeedProcessor
 
 The first "dynamic feed job" is the "sizeFeedProcessor" which downloads feeds 
 from all of the enabled cloud hosting providers.  This job executes the 
@@ -1363,7 +1361,7 @@ following process:
 The job executes as per the "Dynamic Feed Job Schedule."
 
 
-V. B. Dynamic Feed Job: LocationFeedProcessor
+V. E. 2. Dynamic Feed Job: LocationFeedProcessor
 
 Locations are mapped by the LocationFeedProcessor, which downloads a list of all
 data center locations maintained by a cloud hosting provider then maps the same
@@ -1394,7 +1392,7 @@ more complex process than V. A.:
     	locations and delete the raw file.
 
 
-V. C. Dynamic Feed Job: ImageFeedProcessor
+V. E. 3. Dynamic Feed Job: ImageFeedProcessor
 
 Image feeds are mapped by the ImageFeedProcessor which downloads the list of 
 all possible images provided by a hosting provider before mapping them to the 
@@ -1407,7 +1405,7 @@ most simple to document:
         (2)(b) Parse the list to create a map file.
 
 
-V. D. Dynamic Feed Job Schedule
+V. E. 4. Dynamic Feed Job Schedule
 
 The feed job schedule executes under the deploy user's crontab, limiting the 
 job's potential permissions to that of deploy for security reasons.  Each of 
