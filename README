@@ -906,7 +906,7 @@ IV. D.	Namespace: group
 
 IV. D. 1. COMMAND: group.addUser groupName myUsername
 
-IV. D. 2. COMMAND: group.addUsers groupName "<comma-delimited list of usernames>"
+IV. D. 2. COMMAND: group.addUsers groupName "<comma-delimited list of users>"
 
 IV. D. 3. COMMAND: group.addPolicy myGroupName myPolicyName [enforce|passive]
 
@@ -926,16 +926,59 @@ IV. D. 9. COMMAND: group.removeUser myGroupName myUserName
 
 IV. D. 10. COMMAND: group.removePolicy myGroupName myPolicyName
 
-
-
 IV. E. 	Namespace: user
 
 
 IV. E. 1. COMMAND: user.create <role> uName --email me@dn.tld --key"<sshPubKey>"
 
 IV. E. 2. COMMAND: user.delete userName [--purge]
-	
 
+
+IV. F.	Namespace: server
+
+IV. F. 1. COMMAND: server.create <serverName> <recipeName>	
+
+IV. F. 2. COMMAND: server.delete <serverName>
+
+IV. F. 3. COMMAND: server.restart <serverName>
+
+IV. F. 4. COMMAND: server.list
+
+
+IV. G.	Namespace: dns
+
+IV. G. 1. COMMAND: dns.createRecord <fqdn> <recordType> <target>
+
+IV. G. 2. COMMAND: dns.delete <fqdn>
+
+IV. G. 3. COMMAND: dns.list <domain>
+
+
+IV. H.	Namespace: recipe
+IV. H. 1. COMMAND: recipe.list
+
+	This command will show the list of all recipes available on the system
+	and indicate whether or not the recipe is enabled or disabled on the
+	system.
+
+IV. H. 2. COMMAND: recipe.show <recipeName>
+
+	This command will allow the user to view a recipe.
+	
+IV. H. 3. COMMAND: recipe.history <recipeName>
+
+	This command allows the user to view the recipe's git history.
+
+IV. H. 4. COMMAND: recipe.disable <recipeName>
+
+	This command will disable a recipe, preventing any user from applying the
+	recipe in any way.  Only hosting administrators can enable/disable recipes.
+
+IV. H. 5. COMMAND: recipe.enable <recipeName>
+
+	This command will enable a recipe, allowing a user to apply the same to a
+	hosting account.  By default all recipes should be "disabled" until they
+	have been reviewed and approved by a hosting admin.
 
 
 
