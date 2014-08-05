@@ -38,8 +38,8 @@ Table of Contents
 
 I.      Introduction
 
-	I. A. 	What is deployShell?
-	I. B.	Why Adopt deployShell?
+I. A. 	What is deployShell?
+I. B.	Why Adopt deployShell?
 
 
 II.     Installing and Using deployShell
@@ -54,25 +54,18 @@ II. F.	Creating, Listing and Deleting Server Instances.
 
 III.    Architecture: An Overview
 
-	III. A.	The Shell User Interface.
-	III. B. Command Structure and Processing
-	III. C. FHS Compliance
-	III. D.	Mapping Operations
-	III. E. Evaluating Recipes Against Maps 
-
-IV.     Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
-V.      RESERVED
+III. A.	The Shell User Interface.
+III. B. Command Structure and Processing
+III. C. FHS Compliance
+III. D.	Mapping Operations
+III. E. Evaluating Recipes Against Maps 
+IV. 	Command Reference.
+V.		Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
 VI.     Recipes: A Beginning
 VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
 VIII.   Recipes: Quality Assurance through Unit Tests
 IX.     Recipes: Advanced Recipes for Building Clusters
 X.      User Management in deployShell
-XI.     Reserved
-XII.	Reserved
-XIII.	Reserved
-XIV.    Built-in Command Reference
-XV.     Add-On Command Reference
-
 	
 ================================================================================
 I. 	Introduction
@@ -379,6 +372,7 @@ This can later be disabled by executing--
 
 	cloudProvider.account.relaxPolicy myPolicyName
 
+
 A policy can be dissociated from a cloud-provider account using--
 
 	
@@ -448,12 +442,26 @@ To create a new user account, either the systems administrator or a user admin
 must log into the deployShell server and execute the following command--
 
 
-	user.create <role> userName email@myFQDN.tld  "<sshPublicKeyString>"
+	user.create <role> userName --email email@myFQDN.tld  --key"<sshPubKey>"
 	
 This command would create a new user with the specified role (e.g. deployer,
 userAdmin, hostingAdmin and provide both an email address and SSH public key for
 authenticating the user into the system.
 
+
+II. D. 2. Deleting a User Account
+
+To delete a user account, simply execute--
+
+	
+	user.delete userName [--purge]
+	
+
+Without the --purge argument, this command will disable a user's account but it
+will NOT remove the user account completely from the system, preserving the UID
+and GID for the future if the user is restored.  If the --purge argument is used
+then the user account will be removed completely, which means re-creating the 
+user account will most likely result in a new UID/GID.
 
 
 II. D. 2. LDAP/OAUTH Authentication
@@ -679,10 +687,187 @@ III. D.	Mapping Operations
 III. E. Evaluating Recipes Against Maps 
 
 
+=============================================================================
+IV.	 Command Reference
+=============================================================================
+
+This section identifies all commands available in deployShell along with the
+syntax and usage notes for the same.  Looking at the structure of deployShell
+commands, the reader should note that commands are structured with a dotted-
+tree syntax.  The left-most term in each command identifies the namespace of the
+command (e.g. server, cloudProvider, user, group, etc) in order to provide a 
+context for the command.  Several commands have sub-spaces (used to clarify the
+command's context) with a right-most term providing the context-specific
+command.  An example might be--
+
+
+group.addPolicy
+
+
+This command belongs to namespace "group" with a context-specific command of
+"addPolicy."  Likewise--
+
+
+cloudProvider.account.delete myAccountName
+
+
+belongs to the namespace "cloudProvider" with a "sub-space" of "account" which 
+gives context to the command "delete."
+
+The purpose of this tree-based command structure is not only readability but 
+also maintainability of the code.  This allows a "namespace" class to be defined
+at the top level with sub-space child classes and context-aware command-specific
+classes at the base.  The result is a simpler process of routing commands to the
+appropriate underlying functionality.
+
+
+
+IV. A.	Namespace: None (General Commands)
+
+
+IV. A. 1.	COMMAND: quit | exit
+
+	STATUS: In development
+	
+	Either typing quit or exit allows the user to exit the current shell
+	(which implies a log out if the current shell is the main shell, which
+	is an important note when nesting shells).
+
+
+	
+IV. A. 2.	COMMAND: help [command | topic | list]
+	
+	STATUS: In development
+	
+	Typing "help" will return the general help document unless a context is
+	provided (e.g. a command or topic string.  The "context" parameter will 
+	cause the relevant file to be displayed.
+	
+	If the "help list" option is invoked, a list of all help documents will be
+	rendered to the display.
+
+	
+
+IV. B.	Namespace: Server (General Server Operations)
+
+
+
+IV. B. 1.	COMMAND: server.configure [--interactive]
+	
+	STATUS: In development
+	
+	This command is used one time only during deployShell system implementation.
+	It has an optional "interactive" mode which will walk the user through a 
+	wizard-based setup program and output both an active, running server as well
+	as a configuration file for this running server that can be downloaded and
+	used to deploy clone deployShell servers.
+
+
+	
+IV. B. 2.	COMMAND: 
+
+	STATUS: 
+
+
+
+IV. C. 	Namespace: cloudProvider
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.add myAccountName amazonAWS
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.delete myAccountName
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.disable myAccountName
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.enable myAccountName
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.enforcePolicy myPolicyName
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.policyApply acctName polName <enforce|passive>
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.policyAudit myPolicyName
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.relaxPolicy myPolicyName
+
+	STATUS: Not Started
+
+
+
+IV. C. 1.	COMMAND: cloudProvider.account.removePolicy myAccountName myPolicyName
+
+	STATUS: Not Started
+
+
+
+
+IV. D.	Namespace: group
+
+IV. D. 1. COMMAND: group.addUser groupName myUsername
+
+IV. D. 2. COMMAND: group.addUsers groupName "<comma-delimited list of usernames>"
+
+IV. D. 3. COMMAND: group.addPolicy myGroupName myPolicyName [enforce|passive]
+
+IV. D. 4. COMMAND: group.auditPolicy myGroupName
+
+
+IV. D. 5. COMMAND: group.create groupName
+
+IV. D. 6. COMMAND: group.delete myGroupName
+
+
+IV. D. 7. COMMAND: group.list
+
+IV. D. 8. COMMAND: group.members groupName
+
+IV. D. 9. COMMAND: group.removeUser myGroupName myUserName
+
+IV. D. 10. COMMAND: group.removePolicy myGroupName myPolicyName
+
+
+
+IV. E. 	Namespace: user
+
+
+IV. E. 1. COMMAND: user.create <role> uName --email me@dn.tld --key"<sshPubKey>"
+
+IV. E. 2. COMMAND: user.delete userName [--purge]
+	
+
+
 
 
 =============================================================================
-IV.	 Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
+V.	 Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
 =============================================================================
 
 To make the deployShell solution vendor agnostic, the system must devise a 
@@ -1233,25 +1418,6 @@ X. F.   Listing deployShell Users
 
 
 
-=============================================================================
-XI.     Reserved
-=============================================================================
-
-=============================================================================
-XII.    Reserved
-=============================================================================
-
-=============================================================================
-XIII.   Reserved
-=============================================================================
-
-=============================================================================
-XIV.    Built-in Command Reference
-=============================================================================
-
-=============================================================================
-XV.     Add-On Command Reference
-=============================================================================
 
 
 				
