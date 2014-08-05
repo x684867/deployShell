@@ -59,12 +59,27 @@ III. B. Command Structure and Processing
 III. C. FHS Compliance
 III. D.	Mapping Operations
 III. E. Evaluating Recipes Against Maps 
+
+
 IV. 	Command Reference.
+IV. A.	Namespace: None (General Commands)
+
+
 V.		Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
+
+
 VI.     Recipes: A Beginning
+
+
 VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
+
+
 VIII.   Recipes: Quality Assurance through Unit Tests
+
+
 IX.     Recipes: Advanced Recipes for Building Clusters
+
+
 X.      User Management in deployShell
 	
 ================================================================================
@@ -763,38 +778,61 @@ IV. B. 1.	COMMAND: server.configure [--interactive]
 	used to deploy clone deployShell servers.
 
 
-	
-IV. B. 2.	COMMAND: 
-
-	STATUS: 
-
-
 
 IV. C. 	Namespace: cloudProvider
 
 
 
-IV. C. 1.	COMMAND: cloudProvider.account.add myAccountName amazonAWS
+IV. C. 1.	COMMAND: cloudProvider.account.add myAccountName [providerAPIname]
 
 	STATUS: Not Started
 
+	This command will create a new cloud hosting provider account file which 
+	the shell will use to connect to and interact with the cloud provider's API.
+	Each cloud provider has unique needs and the generic command process will
+	engage the provider-specific setup routines included in the deployShell API
+	interface module.
+	
+	Optional arguments:
+	
+		--interactive	T
+						The --interactive flag will engage any available wizard
+						functionality to walk the user through a given cloud 
+						provider's setup process.
 
+		--json <JSON string>
+						The --json argument will allow the user to provide a
+						JSON-encoded configuration string defining the cloud
+						provider account.  This is helpful when recreating an
+						account from a previous configuration.
 
 IV. C. 1.	COMMAND: cloudProvider.account.delete myAccountName
 
 	STATUS: Not Started
 
-
+	This command will delete a cloud provider account file ONLY if there are no
+	active servers on the account.  In the event a pre-flight check determines
+	that there is any active server or infrastructure on the account, it will
+	fail to delete the account.
+	
+	
 
 IV. C. 1.	COMMAND: cloudProvider.account.disable myAccountName
 
 	STATUS: Not Started
 
+	This command will disable a given account, preventing further access to the
+	same.  However it will not disable any services running on the account at
+	the time.  It will only prevent the users from interacting with these assets
+	until the account is re-enabled.
 
 
 IV. C. 1.	COMMAND: cloudProvider.account.enable myAccountName
 
 	STATUS: Not Started
+
+	This command will enable a given cloud provider account, allowing users to
+	interact with the account and its services.
 
 
 
@@ -802,17 +840,41 @@ IV. C. 1.	COMMAND: cloudProvider.account.enforcePolicy myPolicyName
 
 	STATUS: Not Started
 
+	This command puts a given cloud provider account's associated policy into
+	"enforcing" mode.  See also relaxPolicy.	
+	
 
 
-IV. C. 1.	COMMAND: cloudProvider.account.policyApply acctName polName <enforce|passive>
+IV. C. 1.	COMMAND: cloudProvider.account.policyApply acctName polName 
 
 	STATUS: Not Started
 
-
+	This command will associate a given policy file with a given cloud provider
+	account file and optionally cause the file to be enforced, though the
+	default behavior is for the file to run in "passive" mode.
+	
+	Optional Arguments:
+		
+		--passive
+					A --passive flag relaxes the enforcement state of the policy
+					file so that it can only be used by the audit utility to 
+					determine violation but not actually enforce against the
+					same.
+					
+		--enforce
+					An --enforce flag places the policy into an enforcing state
+					so that the policy will actively prevent users from acting
+					in any way that violates the same.
+	
+	
 
 IV. C. 1.	COMMAND: cloudProvider.account.policyAudit myPolicyName
 
 	STATUS: Not Started
+
+	This command will report user activity in the "policy enforcement logs" from
+	the perspective of the named policy to identify any deviations from the
+	policy.
 
 
 
@@ -820,12 +882,18 @@ IV. C. 1.	COMMAND: cloudProvider.account.relaxPolicy myPolicyName
 
 	STATUS: Not Started
 
-
-
+	This command puts a given cloud provider's account into a "passive" state
+	so that the policy is no longer actively enforced, though it can be audited.
+	See also "enforcePolicy."
+	
+	
+	
 IV. C. 1.	COMMAND: cloudProvider.account.removePolicy myAccountName myPolicyName
 
 	STATUS: Not Started
 
+	This command removes a given policy file from active service.  However, an
+	archive copy of the policy will remain on the system for audit purposes.
 
 
 
