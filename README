@@ -36,48 +36,48 @@ Table of Contents
 ================================================================================
 
 
-I.      Introduction
+I. Introduction
 
-I. A. 	What is deployShell?
-I. B.	Why Adopt deployShell?
-
-
-II.     Installing and Using deployShell
-
-II. A.	Installation
-II. B.	Getting Started
-II. C.	Adding and Deleting Cloud-Provider Accounts
-II. D.	Adding and Deleting Users
-II. E.	Access Control Lists (User Permissions within deployShell)
-II. F.	Creating, Listing and Deleting Server Instances.
-
-III. 	Command Reference.
-
-III. A.	Namespace: None (General Commands)
+	I. A. What is deployShell?
+	I. B. Why Adopt deployShell?
 
 
-IV.    Architecture: An Overview
+II. Installing and Using deployShell
 
-IV. A.	The Shell User Interface.
-IV. B. Command Structure and Processing
-IV. C. FHS Compliance
-IV. D.	Mapping Operations
-IV. E. Evaluating Recipes Against Maps 
+	II. A. Installation
+	II. B. Getting Started
+	II. C. Adding and Deleting Cloud-Provider Accounts
+	II. D. Adding and Deleting Users
+	II. E. Access Control Lists (User Permissions within deployShell)
+	II. F. Creating, Listing and Deleting Server Instances.
 
+III. Command Reference.
 
-V.      Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
-
-
-VI.     Recipes: A Beginning
-
-
-VII.    Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
+	III. A. Namespace: None (General Commands)
 
 
-VIII.   Recipes: Quality Assurance through Unit Tests
+IV. Architecture: An Overview
+
+	IV. A. The Shell User Interface.
+	IV. B. Command Structure and Processing
+	IV. C. FHS Compliance
+	IV. D. Mapping Operations
+	IV. E. Evaluating Recipes Against Maps 
 
 
-IX.     Recipes: Advanced Recipes for Building Clusters
+V. Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
+
+
+VI. Recipes: A Beginning
+
+
+VII. Recipes: Adding Tags, Pre-Deploy and Post-Deploy Scripts
+
+
+VIII. Recipes: Quality Assurance through Unit Tests
+
+
+IX. Recipes: Advanced Recipes for Building Clusters
 
 
 	
