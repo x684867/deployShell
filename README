@@ -51,18 +51,18 @@ II. D.	Adding and Deleting Users
 II. E.	Access Control Lists (User Permissions within deployShell)
 II. F.	Creating, Listing and Deleting Server Instances.
 
+III. 	Command Reference.
 
-III.    Architecture: An Overview
-
-III. A.	The Shell User Interface.
-III. B. Command Structure and Processing
-III. C. FHS Compliance
-III. D.	Mapping Operations
-III. E. Evaluating Recipes Against Maps 
+III. A.	Namespace: None (General Commands)
 
 
-IV. 	Command Reference.
-IV. A.	Namespace: None (General Commands)
+IV.    Architecture: An Overview
+
+IV. A.	The Shell User Interface.
+IV. B. Command Structure and Processing
+IV. C. FHS Compliance
+IV. D.	Mapping Operations
+IV. E. Evaluating Recipes Against Maps 
 
 
 V.      Mapping: Abstracting Cloud Resources to Integrate Cloud Providers
@@ -80,7 +80,6 @@ VIII.   Recipes: Quality Assurance through Unit Tests
 IX.     Recipes: Advanced Recipes for Building Clusters
 
 
-X.      User Management in deployShell
 	
 ================================================================================
 I. 	Introduction
@@ -641,69 +640,9 @@ before it must be re-deployed, ensuring quality of the environment.
 II. F.	Creating, Listing and Deleting Server Instances.
 
 
-=============================================================================
-III.	 Architecture: An Overview
-=============================================================================
-
-
-
-III. A.	The Shell User Interface.
-
-The deployShell is an interactive shell just like bash, csh, zsh or even the
-DOS command line.  The interactive shell is intended to allow many users to 
-connect via key-based SSH and manage distributed cloud environments.  The shell
-is written in Python with curses providing screen management.  User activity 
-is logged through logger.py for in-depth audit trails.
-
-Each user account for the deployShell is a standard Linux user.  The user's
-shell in /etc/passwd is defined as /opt/deployShell/deployShell.  Each user has
-a home directory in /home/<username> with a default .profile file located 
-therein.  This Linux-integration makes the system more efficient to deploy and
-maintain within the POSIX/FHS standards.
-
-
-III. B. Command Structure and Processing
-
-
-
-
-III. C. FHS Compliance
-
-By design, the deployShell is intended to comply with the Linux File Hierarchy
-Standard (FHS):
-
-	-----------------------------------------------------------------------
-	Path                                      Description
-	-----------------------------------------------------------------------
-	/usr/local/bin/deployShell                deployShell main file
-	/usr/local/lib/deployShell/*              supporting deployShell files
-	/etc/deployShell/deployShell.conf         main configuration file
-	/etc/deployShell.d/*                      supporting configurations
-	/etc/deployShell.d/profile.d/             deployShell profile extensions
-	/etc/deployShell.d/profile.d/profile	  global profile extension
-	/etc/deployShell.d/profile.d/userAdmin    userAdmin profile extension
-	/etc/deployShell.d/profile.d/hostingAdmin hostingAdmin profile extension
-	/etc/deployShell.d/profile.d/deployers    deployer users profile extension
-	/var/log/deployShell.d/*                  log directory
-	/var/lib/deployShell/cloudAccounts/*      cloud hosting accounts
-	/var/lib/deployShell/policies/*           deployment policies
-	-----------------------------------------------------------------------
-
-
-
-
-
-
-
-III. D.	Mapping Operations
-
-
-
-III. E. Evaluating Recipes Against Maps 
-
 
 =============================================================================
-IV.	 Command Reference
+III.	 Command Reference
 =============================================================================
 
 This section identifies all commands available in deployShell along with the
@@ -737,10 +676,10 @@ appropriate underlying functionality.
 
 
 
-IV. A.	Namespace: None (General Commands)
+III. A.	Namespace: None (General Commands)
 
 
-IV. A. 1. COMMAND: quit | exit
+III. A. 1. COMMAND: quit | exit
 
     STATUS: In development
 	
@@ -750,7 +689,7 @@ IV. A. 1. COMMAND: quit | exit
 
 
 	
-IV. A. 2. COMMAND: help [command | topic | list]
+III. A. 2. COMMAND: help [command | topic | list]
 	
     STATUS: In development
 	
@@ -763,11 +702,11 @@ IV. A. 2. COMMAND: help [command | topic | list]
 
 	
 
-IV. B.	Namespace: Server (General Server Operations)
+III. B.	Namespace: Server (General Server Operations)
 
 
 
-IV. B. 1. COMMAND: server.configure [--interactive]
+III. B. 1. COMMAND: server.configure [--interactive]
 	
     STATUS: In development
 	
@@ -779,11 +718,11 @@ IV. B. 1. COMMAND: server.configure [--interactive]
 
 
 
-IV. C. 	Namespace: cloudProvider
+III. C. 	Namespace: cloudProvider
 
 
 
-IV. C. 1. COMMAND: cloudProvider.account.add myAccountName [providerAPIname]
+III. C. 1. COMMAND: cloudProvider.account.add myAccountName [providerAPIname]
 
     STATUS: Not Started
 
@@ -808,7 +747,7 @@ IV. C. 1. COMMAND: cloudProvider.account.add myAccountName [providerAPIname]
 
 
 
-IV. C. 1. COMMAND: cloudProvider.account.delete myAccountName
+III. C. 1. COMMAND: cloudProvider.account.delete myAccountName
 
     STATUS: Not Started
 
@@ -819,7 +758,7 @@ IV. C. 1. COMMAND: cloudProvider.account.delete myAccountName
 	
 	
 
-IV. C. 1. COMMAND: cloudProvider.account.disable myAccountName
+III. C. 1. COMMAND: cloudProvider.account.disable myAccountName
 
     STATUS: Not Started
 
@@ -829,7 +768,7 @@ IV. C. 1. COMMAND: cloudProvider.account.disable myAccountName
     with these assets until the account is re-enabled.
 
 
-IV. C. 1. COMMAND: cloudProvider.account.enable myAccountName
+III. C. 1. COMMAND: cloudProvider.account.enable myAccountName
 
     STATUS: Not Started
 
@@ -838,7 +777,7 @@ IV. C. 1. COMMAND: cloudProvider.account.enable myAccountName
 
 
 
-IV. C. 1. COMMAND: cloudProvider.account.enforcePolicy myPolicyName
+III. C. 1. COMMAND: cloudProvider.account.enforcePolicy myPolicyName
 
     STATUS: Not Started
 
@@ -847,7 +786,7 @@ IV. C. 1. COMMAND: cloudProvider.account.enforcePolicy myPolicyName
 	
 
 
-IV. C. 1. COMMAND: cloudProvider.account.policyApply acctName polName 
+III. C. 1. COMMAND: cloudProvider.account.policyApply acctName polName 
 
     STATUS: Not Started
 
@@ -872,7 +811,7 @@ IV. C. 1. COMMAND: cloudProvider.account.policyApply acctName polName
 	
 	
 
-IV. C. 1. COMMAND: cloudProvider.account.policyAudit myPolicyName
+III. C. 1. COMMAND: cloudProvider.account.policyAudit myPolicyName
 
 	STATUS: Not Started
 
@@ -882,7 +821,7 @@ IV. C. 1. COMMAND: cloudProvider.account.policyAudit myPolicyName
 
 
 
-IV. C. 1. COMMAND: cloudProvider.account.relaxPolicy myPolicyName
+III. C. 1. COMMAND: cloudProvider.account.relaxPolicy myPolicyName
 
     STATUS: Not Started
 
@@ -892,7 +831,7 @@ IV. C. 1. COMMAND: cloudProvider.account.relaxPolicy myPolicyName
 	
 	
 	
-IV. C. 1. COMMAND: cloudProvider.account.removePolicy myAcctName myPolicyName
+III. C. 1. COMMAND: cloudProvider.account.removePolicy myAcctName myPolicyName
 
     STATUS: Not Started
 
@@ -902,83 +841,145 @@ IV. C. 1. COMMAND: cloudProvider.account.removePolicy myAcctName myPolicyName
 
 
 
-IV. D.	Namespace: group
+III. D.	Namespace: group
 
-IV. D. 1. COMMAND: group.addUser groupName myUsername
+III. D. 1. COMMAND: group.addUser groupName myUsername
 
-IV. D. 2. COMMAND: group.addUsers groupName "<comma-delimited list of users>"
+III. D. 2. COMMAND: group.addUsers groupName "<comma-delimited list of users>"
 
-IV. D. 3. COMMAND: group.addPolicy myGroupName myPolicyName [enforce|passive]
+III. D. 3. COMMAND: group.addPolicy myGroupName myPolicyName [enforce|passive]
 
-IV. D. 4. COMMAND: group.auditPolicy myGroupName
-
-
-IV. D. 5. COMMAND: group.create groupName
-
-IV. D. 6. COMMAND: group.delete myGroupName
+III. D. 4. COMMAND: group.auditPolicy myGroupName
 
 
-IV. D. 7. COMMAND: group.list
+III. D. 5. COMMAND: group.create groupName
 
-IV. D. 8. COMMAND: group.members groupName
-
-IV. D. 9. COMMAND: group.removeUser myGroupName myUserName
-
-IV. D. 10. COMMAND: group.removePolicy myGroupName myPolicyName
-
-IV. E. 	Namespace: user
+III. D. 6. COMMAND: group.delete myGroupName
 
 
-IV. E. 1. COMMAND: user.create <role> uName --email me@dn.tld --key"<sshPubKey>"
+III. D. 7. COMMAND: group.list
 
-IV. E. 2. COMMAND: user.delete userName [--purge]
+III. D. 8. COMMAND: group.members groupName
 
+III. D. 9. COMMAND: group.removeUser myGroupName myUserName
 
-IV. F.	Namespace: server
+III. D. 10. COMMAND: group.removePolicy myGroupName myPolicyName
 
-IV. F. 1. COMMAND: server.create <serverName> <recipeName>	
-
-IV. F. 2. COMMAND: server.delete <serverName>
-
-IV. F. 3. COMMAND: server.restart <serverName>
-
-IV. F. 4. COMMAND: server.list
+III. E. 	Namespace: user
 
 
-IV. G.	Namespace: dns
+III. E. 1. COMMAND: user.create <role> uName --email me@dn.tld --key"<sshPubKey>"
 
-IV. G. 1. COMMAND: dns.createRecord <fqdn> <recordType> <target>
-
-IV. G. 2. COMMAND: dns.delete <fqdn>
-
-IV. G. 3. COMMAND: dns.list <domain>
+III. E. 2. COMMAND: user.delete userName [--purge]
 
 
-IV. H.	Namespace: recipe
-IV. H. 1. COMMAND: recipe.list
+III. F.	Namespace: server
+
+III. F. 1. COMMAND: server.create <serverName> <recipeName>	
+
+III. F. 2. COMMAND: server.delete <serverName>
+
+III. F. 3. COMMAND: server.restart <serverName>
+
+III. F. 4. COMMAND: server.list
+
+
+III. G.	Namespace: dns
+
+III. G. 1. COMMAND: dns.createRecord <fqdn> <recordType> <target>
+
+III. G. 2. COMMAND: dns.delete <fqdn>
+
+III. G. 3. COMMAND: dns.list <domain>
+
+
+III. H.	Namespace: recipe
+
+III. H. 1. COMMAND: recipe.list
 
 	This command will show the list of all recipes available on the system
 	and indicate whether or not the recipe is enabled or disabled on the
 	system.
 
-IV. H. 2. COMMAND: recipe.show <recipeName>
+III. H. 2. COMMAND: recipe.show <recipeName>
 
 	This command will allow the user to view a recipe.
 	
-IV. H. 3. COMMAND: recipe.history <recipeName>
+III. H. 3. COMMAND: recipe.history <recipeName>
 
 	This command allows the user to view the recipe's git history.
 
-IV. H. 4. COMMAND: recipe.disable <recipeName>
+III. H. 4. COMMAND: recipe.disable <recipeName>
 
 	This command will disable a recipe, preventing any user from applying the
 	recipe in any way.  Only hosting administrators can enable/disable recipes.
 
-IV. H. 5. COMMAND: recipe.enable <recipeName>
+III. H. 5. COMMAND: recipe.enable <recipeName>
 
 	This command will enable a recipe, allowing a user to apply the same to a
 	hosting account.  By default all recipes should be "disabled" until they
 	have been reviewed and approved by a hosting admin.
+
+
+=============================================================================
+IV.	 Architecture: An Overview
+=============================================================================
+
+
+
+IV. A.	The Shell User Interface.
+
+The deployShell is an interactive shell just like bash, csh, zsh or even the
+DOS command line.  The interactive shell is intended to allow many users to 
+connect via key-based SSH and manage distributed cloud environments.  The shell
+is written in Python with curses providing screen management.  User activity 
+is logged through logger.py for in-depth audit trails.
+
+Each user account for the deployShell is a standard Linux user.  The user's
+shell in /etc/passwd is defined as /opt/deployShell/deployShell.  Each user has
+a home directory in /home/<username> with a default .profile file located 
+therein.  This Linux-integration makes the system more efficient to deploy and
+maintain within the POSIX/FHS standards.
+
+
+IV. B. Command Structure and Processing
+
+
+
+
+IV. C. FHS Compliance
+
+By design, the deployShell is intended to comply with the Linux File Hierarchy
+Standard (FHS):
+
+	-----------------------------------------------------------------------
+	Path                                      Description
+	-----------------------------------------------------------------------
+	/usr/local/bin/deployShell                deployShell main file
+	/usr/local/lib/deployShell/*              supporting deployShell files
+	/etc/deployShell/deployShell.conf         main configuration file
+	/etc/deployShell.d/*                      supporting configurations
+	/etc/deployShell.d/profile.d/             deployShell profile extensions
+	/etc/deployShell.d/profile.d/profile	  global profile extension
+	/etc/deployShell.d/profile.d/userAdmin    userAdmin profile extension
+	/etc/deployShell.d/profile.d/hostingAdmin hostingAdmin profile extension
+	/etc/deployShell.d/profile.d/deployers    deployer users profile extension
+	/var/log/deployShell.d/*                  log directory
+	/var/lib/deployShell/cloudAccounts/*      cloud hosting accounts
+	/var/lib/deployShell/policies/*           deployment policies
+	-----------------------------------------------------------------------
+
+
+
+
+
+
+
+IV. D.	Mapping Operations
+
+
+
+IV. E. Evaluating Recipes Against Maps 
 
 
 
@@ -1486,50 +1487,6 @@ VIII.   Recipes: Quality Assurance through Unit Tests
 =============================================================================
 IX.     Recipes: Advanced Recipes for Building Clusters
 =============================================================================
-
-=============================================================================
-X.      User Management in deployShell
-=============================================================================
-
-X. A.   Users in deployShell
-
-Users created in deployShell are Linux users with deployShell as their user
-shell and /home/deploy as their home directory.  They authenticate with the
-server using SSH keys but have no access to the underlying operating system.
-Their only privilege is to execute deployShell commands and to use its feature
-set.  These users will appear in /etc/passwd and /etc/shadow as Linux users,
-but their privileges and other deployShell specific characteristics are found
-in CONFDIR/users.
-
-Users have two types of permissions: general and promoted.  Users with general
-permissions have the ability to deploy servers, delete servers, list objects
-and in general execute the deployment objective of the deployShell.  However,
-the general user privilege does not allow users to manage user or cloud 
-provider accounts.  Likewise general privileges do not allow the enabling or
-disabling of a cloud provider's API.  To do these non-general (or "promoted"
-tasks), the user must have his/her account "promoted," becoming a super user.
-
-
-X. B.   Creating deployShell Users
-
-
-
-X. C.   Deleting deployShell Users
-
-
-
-X. D.   Promoting deployShell Users
-
-
-
-X. E.   Demoting deployShell Users
-
-
-
-X. F.   Listing deployShell Users
-
-
-
 
 
 
