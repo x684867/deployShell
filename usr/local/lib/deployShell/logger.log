@@ -402,3 +402,111 @@ arguments: []
 2014-08-04 02:48:31:shellUI:COMMANDLINE[2]: d a a
 2014-08-04 02:48:31:shellUI:Syntax Error.  Expected --<argName>
 2014-08-04 02:48:31:shellUI:__del__()
+2014-08-07 02:56:38:shellUser:----------------------------------------
+2014-08-07 02:56:38:shellUser:    logger.log[shellUser]
+2014-08-07 02:56:38:shellUser:    Start: 2014-08-07 02:56:38.699006
+2014-08-07 02:56:38:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 02:56:47:shellUser:----------------------------------------
+2014-08-07 02:56:47:shellUser:    logger.log[shellUser]
+2014-08-07 02:56:47:shellUser:    Start: 2014-08-07 02:56:47.687158
+2014-08-07 02:56:47:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 02:58:46:shellUser:----------------------------------------
+2014-08-07 02:58:46:shellUser:    logger.log[shellUser]
+2014-08-07 02:58:46:shellUser:    Start: 2014-08-07 02:58:46.975241
+2014-08-07 02:58:46:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:00:29:shellUser:----------------------------------------
+2014-08-07 03:00:29:shellUser:    logger.log[shellUser]
+2014-08-07 03:00:29:shellUser:    Start: 2014-08-07 03:00:29.467844
+2014-08-07 03:00:29:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:00:36:shellUser:----------------------------------------
+2014-08-07 03:00:36:shellUser:    logger.log[shellUser]
+2014-08-07 03:00:36:shellUser:    Start: 2014-08-07 03:00:36.202225
+2014-08-07 03:00:36:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:02:25:shellUser:----------------------------------------
+2014-08-07 03:02:25:shellUser:    logger.log[shellUser]
+2014-08-07 03:02:25:shellUser:    Start: 2014-08-07 03:02:25.686404
+2014-08-07 03:02:25:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:03:36:shellUser:----------------------------------------
+2014-08-07 03:03:36:shellUser:    logger.log[shellUser]
+2014-08-07 03:03:36:shellUser:    Start: 2014-08-07 03:03:36.565818
+2014-08-07 03:03:36:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:04:44:shellUser:----------------------------------------
+2014-08-07 03:04:44:shellUser:    logger.log[shellUser]
+2014-08-07 03:04:44:shellUser:    Start: 2014-08-07 03:04:44.306806
+2014-08-07 03:04:44:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:05:44:shellUser:----------------------------------------
+2014-08-07 03:05:44:shellUser:    logger.log[shellUser]
+2014-08-07 03:05:44:shellUser:    Start: 2014-08-07 03:05:44.366586
+2014-08-07 03:05:44:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:06:11:shellUser:----------------------------------------
+2014-08-07 03:06:11:shellUser:    logger.log[shellUser]
+2014-08-07 03:06:11:shellUser:    Start: 2014-08-07 03:06:11.350561
+2014-08-07 03:06:11:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:06:25:shellUser:----------------------------------------
+2014-08-07 03:06:25:shellUser:    logger.log[shellUser]
+2014-08-07 03:06:25:shellUser:    Start: 2014-08-07 03:06:25.692900
+2014-08-07 03:06:25:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:06:27:shellUser:----------------------------------------
+2014-08-07 03:06:27:shellUser:    logger.log[shellUser]
+2014-08-07 03:06:27:shellUser:    Start: 2014-08-07 03:06:27.998252
+2014-08-07 03:06:27:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:06:48:shellUser:----------------------------------------
+2014-08-07 03:06:48:shellUser:    logger.log[shellUser]
+2014-08-07 03:06:48:shellUser:    Start: 2014-08-07 03:06:48.126960
+2014-08-07 03:06:48:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:07:14:shellUser:----------------------------------------
+2014-08-07 03:07:14:shellUser:    logger.log[shellUser]
+2014-08-07 03:07:14:shellUser:    Start: 2014-08-07 03:07:14.304323
+2014-08-07 03:07:14:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:11:48:shellUser:----------------------------------------
+2014-08-07 03:11:48:shellUser:    logger.log[shellUser]
+2014-08-07 03:11:48:shellUser:    Start: 2014-08-07 03:11:48.852056
+2014-08-07 03:11:48:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:12:45:shellUser:----------------------------------------
+2014-08-07 03:12:45:shellUser:    logger.log[shellUser]
+2014-08-07 03:12:45:shellUser:    Start: 2014-08-07 03:12:45.945819
+2014-08-07 03:12:45:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:14:01:shellUser:----------------------------------------
+2014-08-07 03:14:01:shellUser:    logger.log[shellUser]
+2014-08-07 03:14:01:shellUser:    Start: 2014-08-07 03:14:01.431014
+2014-08-07 03:14:01:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:16:37:shellUser:----------------------------------------
+2014-08-07 03:16:37:shellUser:    logger.log[shellUser]
+2014-08-07 03:16:37:shellUser:    Start: 2014-08-07 03:16:37.913812
+2014-08-07 03:16:37:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:17:22:shellUser:----------------------------------------
+2014-08-07 03:17:22:shellUser:    logger.log[shellUser]
+2014-08-07 03:17:22:shellUser:    Start: 2014-08-07 03:17:22.520653
+2014-08-07 03:17:22:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:17:42:shellUser:----------------------------------------
+2014-08-07 03:17:42:shellUser:    logger.log[shellUser]
+2014-08-07 03:17:42:shellUser:    Start: 2014-08-07 03:17:42.700192
+2014-08-07 03:17:42:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:17:52:shellUser:----------------------------------------
+2014-08-07 03:17:52:shellUser:    logger.log[shellUser]
+2014-08-07 03:17:52:shellUser:    Start: 2014-08-07 03:17:52.836311
+2014-08-07 03:17:52:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:19:15:shellUser:----------------------------------------
+2014-08-07 03:19:15:shellUser:    logger.log[shellUser]
+2014-08-07 03:19:15:shellUser:    Start: 2014-08-07 03:19:15.331937
+2014-08-07 03:19:15:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:19:27:shellUser:----------------------------------------
+2014-08-07 03:19:27:shellUser:    logger.log[shellUser]
+2014-08-07 03:19:27:shellUser:    Start: 2014-08-07 03:19:27.914565
+2014-08-07 03:19:27:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:19:43:shellUser:----------------------------------------
+2014-08-07 03:19:43:shellUser:    logger.log[shellUser]
+2014-08-07 03:19:43:shellUser:    Start: 2014-08-07 03:19:43.173373
+2014-08-07 03:19:43:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:20:24:shellUser:----------------------------------------
+2014-08-07 03:20:24:shellUser:    logger.log[shellUser]
+2014-08-07 03:20:24:shellUser:    Start: 2014-08-07 03:20:24.421259
+2014-08-07 03:20:24:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:21:41:shellUser:----------------------------------------
+2014-08-07 03:21:41:shellUser:    logger.log[shellUser]
+2014-08-07 03:21:41:shellUser:    Start: 2014-08-07 03:21:41.358313
+2014-08-07 03:21:41:shellUser:__del__() terminating [samcaldwell]
+2014-08-07 03:21:53:shellUser:----------------------------------------
+2014-08-07 03:21:53:shellUser:    logger.log[shellUser]
+2014-08-07 03:21:53:shellUser:    Start: 2014-08-07 03:21:53.744885
+2014-08-07 03:21:53:shellUser:__del__() terminating [samcaldwell]

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#	commandRouter.py
+#	shellRouter.py
 #
 # The MIT License (MIT)
 #
@@ -29,7 +29,7 @@
 from shellUI import shellUI
 from exitRouter import exitRouter
 
-class commandRouter(exitRouter):
+class shellRouter(exitRouter):
 	
 	def __init__(self):
 		pass

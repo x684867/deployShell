@@ -26,11 +26,11 @@
 #
 # This is the main application file.
 #
-import getpass
 import argparse
 from shellRouter import shellRouter
 from shellUI import shellUI
 from shellMotd import shellMotd
+from shellUser import shellUser
 from logger import logger
 #
 # This file should--
@@ -70,12 +70,7 @@ def main():
 		else:
 			raise Exception("Invalid logLevel encountered.")
 		#
-		# Get the current username from the operating system.
-		#
-		# See http://stackoverflow.com/questions/9323834/python-how-to-get-group-ids-of-one-username-like-id-gn
-		# This is a better way.
-		#
-		user=getpass.getuser()
+		user=shellUser()
 		#
 		errorLog=logger('errors')
 		activity=logger('activity')

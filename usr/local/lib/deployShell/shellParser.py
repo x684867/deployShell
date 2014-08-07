@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# commandParser.py
+# shellParser.py
 #
 # The MIT License (MIT)
 #
@@ -28,7 +28,7 @@
 import re
 from logger import logger
 
-class commandParser:
+class shellParser:
 	__command=''
 	__parameter=''
 	__arguments=[]
