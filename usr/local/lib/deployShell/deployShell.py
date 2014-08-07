@@ -31,6 +31,7 @@ from shellRouter import shellRouter
 from shellUI import shellUI
 from shellMotd import shellMotd
 from shellUser import shellUser
+from shellConfig import shellConfig
 from logger import logger
 #
 # This file should--
@@ -41,29 +42,26 @@ from logger import logger
 #
 #
 class deployShell:
-	__args=[]
-	__logLevel=None
 	__activityLog=None
 	__errorLog=None
 	__user=None
 	__shell=None
 	__router=None
+	__config=None
 	
-	def __setLogLevel(self):
-		self.__logLevel=logger.DEBUG
-		if self.__args.logLevel=="INFO":
-			self.__logLevel=logger.INFO
-		elif self.__args.logLevel=="CRITICAL":
-			self.__logLevel=logger.CRITICAL
-		elif self.__args.logLevel=="WARNING":
-			self.__logLevel=logger.WARNING
-		elif self.__args.logLevel=="DEBUG":
-			self.__logLevel=logger.DEBUG
+	def __setLogLevel(self,a):
+		if a.logLevel=="INFO":
+			return logger.INFO
+		elif a.logLevel=="CRITICAL":
+			return logger.CRITICAL
+		elif a.logLevel=="WARNING":
+			return logger.WARNING
+		elif a.logLevel=="DEBUG":
+			return logger.DEBUG
 		else:
-			raise Exception("Invalid logLevel encountered.")
+			raise Exception("Invalid logLevel encountered ["+str(a)+"]")
 		
-			
-	def __init__(self):
+	def __processArgs(self):
 		parser=argparse.ArgumentParser(
 			prog="deployShell",
 			description="deployShell provides cloud-deployment automation",
@@ -75,43 +73,65 @@ class deployShell:
 			default='INFO'
 			help='set the logLevel (DEBUG,INFO,WARNING,CRITICAL)'
 		)
+		parser.add_argument(
+			'--config',
+			dest='configFileName',
+			default='/etc/deployShell.conf',
+			help='specify the shell configuration file.'
+		)
 		try:
-			args=parser.parse_args()
+			return parser.parse_args()
 		except Exception as err:
 			raise Exception("failed to parse args.  Error:"+str(err))
-		self.__setLogLevel()
-		self.__user=shellUser()
-		self.__activityLog=logger('activity',self.__logLevel)
-		self.__errorLog=logger('errors',self.__logLevel)
-		self.__shell=shellUI(self.__logLevel)
-		self.__router=shellRouter(self.__logLevel)
+						
+	def __init__(self):
+		args=self.__processArgs()
+		logLevel=self.__setLogLevel()
+		self.__config=shellConfig(logLevel,args.configFileName)
+		self.__user=shellUser(logLevel,self.__config)
+		self.__activityLog=logger(logLevel,self.__config,'activity')
+		self.__errorLog=logger(logLevel,self.__config,'errors')
+		self.__shell=shellUI(logLevel,self.__user,self.__config)
+		self.__router=shellRouter(logLevel,self.__user,self.__config)
 		
 	def start(self):
-		exitShell=False
-		while not exitShell:
-			try:
-				result=command=shell.getCommand()
+		try:
+			exitShell=False
+			while not exitShell:
+				result=None
+				try:
+					result=self.__shell.getCommand()
+				except:
+					raise Exception("shell.getCommand() encountered unhandled exception.  Error:"+str(err))
+				
 				if result.error:
 					errorLog.write("[user:"+user+"] "+result.message)
 				activityLog.write("[user:"+user+"] "+shell.stringify(command))
-				result=router.route(command)
+					
+				try:
+					result=router.route(command)
+				except Exception as err:
+					raise Exception("router.route() encountered unhandled exception. Error:"+str(err))
+				
 				if result.error:
-					errorLog.write("[user:"+user+"] "+result.message)
+					errorLog.write("[user:"+self.__user.username+"] "+result.message)
 				shell.write(result.message)
-			except Exception as err:
-				#
-				# Handle all non-fatal exceptions here.
-				# if we can't handle the exception, then
-				# we will raise the exception causing the 
-				# shell to terminate.
-				#
-				raise Exception(str(err))
+				
+		except Exception as err:
+			#
+			# Handle all non-fatal exceptions here.
+			# if we can't handle the exception, then
+			# we will raise the exception causing the 
+			# shell to terminate.
+			#
+			raise Exception("deployShell::start(): " + str(err))
 		#
 		# Terminating normal.  Show the log out message of the day.
 		#
-		motd.logout()
-	
-	
+		activityLog.write("terminating [user:"+self.__user.username+"]")
+		
+		
+
 if __name__ == "__main__":
 	ds=deployShell()
 	ds.start()
