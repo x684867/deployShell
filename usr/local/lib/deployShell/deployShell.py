@@ -40,52 +40,53 @@ from logger import logger
 #	(3) create a top-level command-and-control logic and exception handling.
 #
 #
-def main():
-	try:
+class deployShell:
+	__args=[]
+	__logLevel=None
+	__activityLog=None
+	__errorLog=None
+	__user=None
+	__shell=None
+	__router=None
+	
+	def __setLogLevel(self):
+		self.__logLevel=logger.DEBUG
+		if self.__args.logLevel=="INFO":
+			self.__logLevel=logger.INFO
+		elif self.__args.logLevel=="CRITICAL":
+			self.__logLevel=logger.CRITICAL
+		elif self.__args.logLevel=="WARNING":
+			self.__logLevel=logger.WARNING
+		elif self.__args.logLevel=="DEBUG":
+			self.__logLevel=logger.DEBUG
+		else:
+			raise Exception("Invalid logLevel encountered.")
+		
+			
+	def __init__(self):
 		parser=argparse.ArgumentParser(
 			prog="deployShell",
 			description="deployShell provides cloud-deployment automation",
 			epilog="for more information, see deployshell.com"
-		)
-		#
-		# Reserved for future use to pass in parameters.
-		# 	
+		) 	
 		parser.add_argument(
 			'--logLevel',
 			dest='LogLevel',
 			default='INFO'
 			help='set the logLevel (DEBUG,INFO,WARNING,CRITICAL)'
-		)	
-		args=parser.parse_args()
+		)
+		try:
+			args=parser.parse_args()
+		except Exception as err:
+			raise Exception("failed to parse args.  Error:"+str(err))
+		self.__setLogLevel()
+		self.__user=shellUser()
+		self.__activityLog=logger('activity',self.__logLevel)
+		self.__errorLog=logger('errors',self.__logLevel)
+		self.__shell=shellUI(self.__logLevel)
+		self.__router=shellRouter(self.__logLevel)
 		
-		logLevel=logger.DEBUG
-		if args.logLevel=="INFO":
-			logLevel=logger.INFO
-		elif args.logLevel=="CRITICAL":
-			logLevel=logger.CRITICAL
-		elif args.logLevel=="WARNING":
-			logLevel=logger.WARNING
-		elif args.logLevel=="DEBUG":
-			logLevel=logger.DEBUG
-		else:
-			raise Exception("Invalid logLevel encountered.")
-		#
-		user=shellUser()
-		#
-		errorLog=logger('errors')
-		activity=logger('activity')
-		#
-		# shellMotd should load the message of the day file.
-		#
-		# motd.welcome() is a short status message for status bars.
-		# motd.display() is a longer version of the motd.
-		# motd.logout() shows the motd.logout file.
-		#
-		motd=shellMotd()
-		shell=shellUI(motd.welcome(),logLevel=logLevel)
-		shell.display(motd.display())
-		router=shellRouter(log=logLevel)
-		#
+	def start(self):
 		exitShell=False
 		while not exitShell:
 			try:
@@ -109,10 +110,9 @@ def main():
 		# Terminating normal.  Show the log out message of the day.
 		#
 		motd.logout()
-	except Exception as err:
-		pass
-
-
+	
+	
 if __name__ == "__main__":
-	main()
+	ds=deployShell()
+	ds.start()
 	
